@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Garden 2026 — Lake Mary, FL</title> 
+<title>Garden 2026 — Lake Mary, FL</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -711,15 +711,15 @@ async function loadAll() {
         plant:     r[0]  || '',
         type:      r[1]  || '',
         date:      r[2]  || '',
-        qty:       parseInt(r[3])   || 0,
+        qty:       parseInt((r[3] || '0').toString().replace(/[$,]/g, ''))     || 0,
         container: r[4]  || '',
         location:  r[5]  || '',
         method:    r[6]  || '',
-        expGerm:   parseInt(r[7])   || 0,
+        expGerm:   parseInt((r[7] || '0').toString().replace(/[$,]/g, ''))     || 0,
         status:    r[8]  || '',
-        daysSince: r[9]  ? parseInt(r[9]) : calcDays(r[2]),
-        costUnit:  parseFloat(r[10]) || 0,
-        totalCost: parseFloat(r[11]) || 0,
+        daysSince: r[9]  ? parseInt((r[9]).toString().replace(/[$,]/g, '')) : calcDays(r[2]),
+        costUnit:  parseFloat((r[10] || '0').toString().replace(/[$,]/g, '')) || 0,
+        totalCost: parseFloat((r[11] || '0').toString().replace(/[$,]/g, '')) || 0,
         notes:     r[12] || ''
       }));
 
@@ -728,9 +728,9 @@ async function loadAll() {
       .map(r => ({
         category: r[0] || '',
         item:     r[1] || '',
-        cost:     parseFloat(r[2]) || 0,
-        qty:      parseInt(r[3])   || 0,
-        perUnit:  parseFloat(r[4]) || 0
+        cost:     parseFloat((r[2] || '0').toString().replace(/[$,]/g, '')) || 0,
+        qty:      parseInt((r[3] || '0').toString().replace(/[$,]/g, ''))   || 0,
+        perUnit:  parseFloat((r[4] || '0').toString().replace(/[$,]/g, '')) || 0
       }));
 
     document.getElementById('last-updated').textContent = 'Updated ' + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
