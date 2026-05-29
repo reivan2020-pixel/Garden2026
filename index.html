@@ -249,6 +249,7 @@ tr:hover td{background:var(--cream);}
       <div class="fgrp" style="grid-column:span 2"><label>Notes</label><input type="text" id="m-notes" placeholder="Any notes…"></div>
     </div>
     <div class="modal-btns">
+      <button class="btn bdr" id="modal-delete-btn" onclick="deletePlant()" style="margin-right:auto">Delete row</button>
       <button class="btn bg2" onclick="closeModal()">Cancel</button>
       <button class="btn bp" id="modal-save-btn" onclick="savePlant()">Save plant</button>
     </div>
@@ -561,6 +562,7 @@ function openAddPlant() {
   editingRow = null;
   document.getElementById('modal-title').textContent = 'Add plant';
   document.getElementById('modal-save-btn').textContent = 'Add plant';
+  document.getElementById('modal-delete-btn').classList.add('hidden');
   ['m-plant','m-container','m-location','m-notes'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('m-type').value='Seed';
   document.getElementById('m-date').value=new Date().toISOString().split('T')[0];
@@ -578,6 +580,7 @@ function openEditPlant(rowNum) {
   editingRow = rowNum;
   document.getElementById('modal-title').textContent = 'Edit plant';
   document.getElementById('modal-save-btn').textContent = 'Save changes';
+  document.getElementById('modal-delete-btn').classList.remove('hidden');
   document.getElementById('m-plant').value = r.plant;
   document.getElementById('m-type').value = r.type;
   document.getElementById('m-date').value = r.date;
@@ -590,6 +593,26 @@ function openEditPlant(rowNum) {
   document.getElementById('m-cost').value = r.costUnit || '';
   document.getElementById('m-notes').value = r.notes;
   document.getElementById('plant-modal').classList.remove('hidden');
+}
+
+async function deletePlant() {
+  if (!editingRow) return;
+  const r = plants.find(p => p._row === editingRow);
+  if (!r) return;
+  if (!confirm('Delete "' + r.plant + '"? This cannot be undone.')) return;
+  const btn = document.getElementById('modal-delete-btn');
+  btn.textContent = 'Deleting…';
+  btn.disabled = true;
+  try {
+    await apiDelete('Plant Log', editingRow - 1);
+    toast('Row deleted');
+    closeModal();
+    await loadAll();
+  } catch(e) {
+    toast('Error deleting: ' + e.message);
+    btn.textContent = 'Delete row';
+    btn.disabled = false;
+  }
 }
 
 function closeModal() {
