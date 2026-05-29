@@ -11,174 +11,163 @@
   --g900:#0a1f0e;--g800:#1a3a1f;--g700:#1B5E20;--g600:#2E7D32;--g500:#388E3C;
   --g400:#43A047;--g300:#66BB6A;--g200:#A5D6A7;--g100:#C8E6C9;--g50:#E8F5E9;
   --cream:#faf7f2;--ink:#1a1a14;--muted:#6b6b5a;--border:#e0d9cc;--white:#fff;
-  --red:#B71C1C;--amber:#E65100;--blue:#1565C0;--r:12px;--rs:8px;
+  --red:#B71C1C;--amber:#E65100;--blue:#1565C0;--teal:#00695C;--r:12px;--rs:8px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;overflow-x:hidden;}
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);font-size:15px;line-height:1.6;}
-
-/* ── Layout ── */
 .app-shell{display:flex;flex-direction:column;height:100dvh;}
-.top-bar{background:var(--g800);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.top-bar{background:var(--g800);padding:11px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .top-bar .brand{font-family:'DM Serif Display',serif;font-size:18px;color:var(--g100);}
-.top-bar .sub{font-size:11px;color:var(--g300);}
-.top-bar-right{display:flex;align-items:center;gap:10px;}
+.top-bar .sub{font-size:10px;color:var(--g300);}
+.top-right{display:flex;align-items:center;gap:8px;}
 .rfbtn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:20px;color:var(--g200);font-size:12px;font-family:'DM Sans',sans-serif;padding:5px 12px;cursor:pointer;}
-.rfbtn:active{background:rgba(255,255,255,0.2);}
-.lu{font-size:10px;color:var(--g300);margin-top:2px;}
-
-.scroll-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 90px;}
-
-/* ── Bottom nav ── */
+.scroll-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 100px;}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--g800);display:flex;border-top:1px solid rgba(255,255,255,0.1);z-index:100;padding-bottom:env(safe-area-inset-bottom);}
-.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;cursor:pointer;color:var(--g300);border:none;background:none;font-family:'DM Sans',sans-serif;gap:3px;min-height:56px;}
-.bn-item.active{color:var(--g200);}
-.bn-item .bn-icon{font-size:20px;line-height:1;}
-.bn-item .bn-label{font-size:10px;font-weight:500;letter-spacing:.02em;}
-.bn-item.active .bn-icon{color:#fff;}
-.bn-item.active .bn-label{color:#fff;}
-
-/* ── Pages ── */
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 2px;cursor:pointer;color:var(--g300);border:none;background:none;font-family:'DM Sans',sans-serif;gap:2px;min-height:54px;-webkit-tap-highlight-color:transparent;}
+.bn-item.active .bn-icon,.bn-item.active .bn-label{color:#fff;}
+.bn-icon{font-size:18px;line-height:1;}
+.bn-label{font-size:9px;font-weight:500;letter-spacing:.03em;color:var(--g300);}
 .page{display:none;}.page.active{display:block;}
-.ph{margin-bottom:20px;}
-.ph h1{font-family:'DM Serif Display',serif;font-size:24px;color:var(--ink);font-weight:400;}
-.ph p{color:var(--muted);font-size:13px;margin-top:2px;}
-.ph-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
-.ph-row h1{font-family:'DM Serif Display',serif;font-size:24px;color:var(--ink);font-weight:400;}
-
-/* ── KPI grid ── */
-.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
-.kpi{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;position:relative;overflow:hidden;}
+.ph{margin-bottom:18px;}
+.ph h1{font-family:'DM Serif Display',serif;font-size:24px;font-weight:400;}
+.ph p{color:var(--muted);font-size:12px;margin-top:2px;}
+.ph-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.ph-row h1{font-family:'DM Serif Display',serif;font-size:24px;font-weight:400;}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.kpi{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:14px 14px;position:relative;overflow:hidden;}
 .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
-.kpi.green::before{background:var(--g500)}.kpi.blue::before{background:var(--blue)}.kpi.amber::before{background:var(--amber)}.kpi.teal::before{background:#00695C}.kpi.red::before{background:var(--red)}
+.kpi.green::before{background:var(--g500)}.kpi.blue::before{background:var(--blue)}.kpi.amber::before{background:var(--amber)}.kpi.teal::before{background:var(--teal)}.kpi.red::before{background:var(--red)}.kpi.purple::before{background:#6A1B9A}
 .kpi-lbl{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
-.kpi-val{font-family:'DM Serif Display',serif;font-size:26px;color:var(--ink);line-height:1;}
+.kpi-val{font-family:'DM Serif Display',serif;font-size:28px;color:var(--ink);line-height:1;}
 .kpi-sub{font-size:10px;color:var(--muted);margin-top:4px;}
-
-/* ── Cards ── */
 .card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:14px;}
-.ct{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;}
-
-/* ── Tables ── */
+.ct{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
 .tw{overflow-x:auto;-webkit-overflow-scrolling:touch;}
 table{width:100%;border-collapse:collapse;font-size:13px;}
 th{text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap;}
-td{padding:11px 10px;border-bottom:1px solid var(--g50);vertical-align:middle;color:var(--ink);}
+td{padding:10px 10px;border-bottom:1px solid var(--g50);vertical-align:middle;color:var(--ink);}
 tr:last-child td{border-bottom:none;}
-
-/* ── Badges ── */
 .badge{display:inline-block;font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px;}
 .bs{background:var(--g50);color:var(--g700);border:1px solid var(--g200);}
 .bt{background:#E3F2FD;color:var(--blue);border:1px solid #BBDEFB;}
-.sp{display:inline-block;font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;}
-
-/* ── Bar charts ── */
+.sp{display:inline-block;font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;cursor:pointer;}
 .bi{margin-bottom:10px;}
 .bm{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;}
 .bn2{color:var(--ink);font-weight:500;}.bv{color:var(--muted);font-family:'DM Mono',monospace;font-size:11px;}
-.bt2{height:6px;background:var(--g50);border-radius:3px;overflow:hidden;}
-.bf{height:100%;border-radius:3px;transition:width .5s;}
-
-/* ── Forms ── */
-.fg{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
-.fg2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
-.fgrp{display:flex;flex-direction:column;gap:5px;}
-.fgrp label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;}
-.fgrp input,.fgrp select,.fgrp textarea{padding:11px 13px;border:1px solid var(--border);border-radius:var(--rs);font-size:15px;font-family:'DM Sans',sans-serif;background:var(--white);color:var(--ink);outline:none;-webkit-appearance:none;transition:border-color .15s;}
+.bt2{height:5px;background:var(--g50);border-radius:3px;overflow:hidden;}
+.bf{height:100%;border-radius:3px;transition:width .6s;}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:14px;}
+.fgrp{display:flex;flex-direction:column;gap:4px;}
+.fgrp label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;}
+.fgrp input,.fgrp select{padding:11px 12px;border:1px solid var(--border);border-radius:var(--rs);font-size:15px;font-family:'DM Sans',sans-serif;background:var(--white);color:var(--ink);outline:none;-webkit-appearance:none;transition:border-color .15s;}
 .fgrp input:focus,.fgrp select:focus{border-color:var(--g400);}
 .btn{padding:13px 20px;border-radius:var(--rs);font-size:15px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;border:none;transition:all .15s;-webkit-tap-highlight-color:transparent;}
-.bp{background:var(--g600);color:#fff;width:100%;}.bp:active{background:var(--g700);}
-.bg2{background:none;border:1px solid var(--border);color:var(--muted);}.bg2:active{background:var(--cream);}
-.bsm{padding:8px 14px;font-size:13px;width:auto;}
+.bp{background:var(--g600);color:#fff;width:100%;}
+.bg2{background:none;border:1px solid var(--border);color:var(--muted);}
+.bsm{padding:7px 14px;font-size:12px;width:auto;}
 .bdr{background:#FFEBEE;color:var(--red);border:1px solid #FFCDD2;}
-
-/* ── Filter bar ── */
 .fb{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
 .fb input,.fb select{padding:9px 12px;border:1px solid var(--border);border-radius:var(--rs);font-size:13px;font-family:'DM Sans',sans-serif;background:var(--white);color:var(--ink);outline:none;-webkit-appearance:none;flex:1;min-width:120px;}
-
-/* ── Watchlist ── */
-.wi-item{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--g50);}
-.wi-item:last-child{border-bottom:none;}
-.wi-name{font-weight:500;font-size:14px;}
-.wi-meta{font-size:11px;color:var(--muted);margin-top:2px;}
-.ot{font-size:11px;font-weight:600;color:var(--red);background:#FFEBEE;padding:4px 10px;border-radius:20px;}
-
-/* ── Harvest stats ── */
-.hs-row{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border);}
-.hs{text-align:center;padding:14px 8px;border-right:1px solid var(--border);}
-.hs:last-child{border-right:none;}
-.hs .num{font-family:'DM Serif Display',serif;font-size:24px;color:var(--g700);}
-.hs .lbl{font-size:10px;color:var(--muted);margin-top:2px;}
-
-/* ── Modal ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:flex;align-items:flex-end;padding:0;}
-.modal{background:var(--white);border-radius:16px 16px 0 0;padding:20px 16px;width:100%;max-height:90dvh;overflow-y:auto;padding-bottom:calc(20px + env(safe-area-inset-bottom));}
-.modal h3{font-family:'DM Serif Display',serif;font-size:20px;margin-bottom:16px;}
-.modal-btns{display:flex;flex-direction:column;gap:8px;margin-top:16px;}
-.modal-btns .btn{width:100%;}
-.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px;}
-
-/* ── Empty ── */
-.empty{text-align:center;padding:32px 16px;color:var(--muted);font-size:13px;}
-
-/* ── Toast ── */
+.empty{text-align:center;padding:28px 16px;color:var(--muted);font-size:13px;}
+.spin{width:20px;height:20px;border:2px solid var(--g100);border-top-color:var(--g500);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px;}
+@keyframes spin{to{transform:rotate(360deg)}}
 .toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--g700);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;opacity:0;transition:all .25s;z-index:999;pointer-events:none;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-
-/* ── Auth ── */
 .auth-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;padding:24px;background:var(--cream);}
 .auth-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:32px 24px;text-align:center;width:100%;max-width:360px;}
 .auth-card h2{font-family:'DM Serif Display',serif;font-size:26px;margin-bottom:6px;}
 .auth-card p{color:var(--muted);font-size:13px;margin-bottom:24px;line-height:1.5;}
-
-/* ── Spin ── */
-.spin{width:22px;height:22px;border:2px solid var(--g100);border-top-color:var(--g500);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px;}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* ── Util ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:flex;align-items:flex-end;}
+.modal{background:var(--white);border-radius:16px 16px 0 0;padding:20px 16px;width:100%;max-height:92dvh;overflow-y:auto;padding-bottom:calc(20px + env(safe-area-inset-bottom));}
+.modal h3{font-family:'DM Serif Display',serif;font-size:20px;margin-bottom:16px;}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 14px;}
+.modal-btns{display:flex;flex-direction:column;gap:8px;margin-top:16px;}
+.modal-btns .btn{width:100%;}
 .hidden{display:none!important;}
-.care-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--g50);}
-.care-row:last-child{border-bottom:none;}
 
-/* Desktop enhancements */
+/* Health score ring */
+.health-ring{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 0;}
+.ring-wrap{position:relative;width:80px;height:80px;margin:0 auto 8px;}
+.ring-wrap svg{transform:rotate(-90deg);}
+.ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ring-score{font-family:'DM Serif Display',serif;font-size:22px;color:var(--ink);}
+.ring-sub{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;}
+
+/* Timeline */
+.timeline-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--g50);}
+.timeline-item:last-child{border-bottom:none;}
+.tl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.tl-main{font-size:13px;font-weight:500;}
+.tl-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.tl-date{font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);white-space:nowrap;margin-left:auto;flex-shrink:0;}
+
+/* Quick status tap */
+.status-tap{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0;}
+.st-btn{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:500;border:1px solid var(--border);background:var(--white);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.st-btn.active{border-width:2px;}
+.st-btn:active{opacity:.7;}
+
+/* Alert items */
+.alert-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--g50);}
+.alert-item:last-child{border-bottom:none;}
+.alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.alert-text{font-size:13px;font-weight:500;}
+.alert-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+
+/* Harvest stats */
+.hs-row{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border);}
+.hs{text-align:center;padding:12px 8px;border-right:1px solid var(--border);}
+.hs:last-child{border-right:none;}
+.hs .num{font-family:'DM Serif Display',serif;font-size:22px;color:var(--g700);}
+.hs .lbl{font-size:10px;color:var(--muted);margin-top:1px;}
+
+/* Score breakdown */
+.score-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--g50);font-size:13px;}
+.score-row:last-child{border-bottom:none;}
+.score-pill{font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;}
+
+/* Diversity grid */
+.div-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:4px;}
+.div-item{background:var(--g50);border-radius:var(--rs);padding:10px 8px;text-align:center;}
+.div-num{font-family:'DM Serif Display',serif;font-size:20px;color:var(--g700);}
+.div-lbl{font-size:10px;color:var(--muted);margin-top:2px;}
+
+/* Desktop */
 @media(min-width:768px){
   .app-shell{flex-direction:row;}
-  .sidebar-desktop{width:220px;background:var(--g800);min-height:100dvh;display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100dvh;}
-  .bottom-nav{display:none;}
-  .top-bar{display:none;}
+  .sidebar-desk{width:220px;background:var(--g800);min-height:100dvh;display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100dvh;}
+  .bottom-nav,.top-bar{display:none;}
   .scroll-area{padding:28px 32px 32px;}
-  .kpi-grid{grid-template-columns:repeat(4,1fr);}
+  .kpi-grid{grid-template-columns:repeat(3,1fr);}
   .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-  .fg2{grid-template-columns:1fr 1fr 1fr;}
+  .three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
   .modal-overlay{align-items:center;padding:20px;}
   .modal{border-radius:var(--r);max-width:540px;margin:0 auto;}
   .modal-btns{flex-direction:row;justify-content:flex-end;}
-  .modal-btns .btn{width:auto;}
+  .modal-btns .btn,.bp{width:auto;}
   .modal-btns .bdr{margin-right:auto;}
-  .bp{width:auto;}
-  .sb-brand{padding:24px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.08);}
-  .sb-brand .wm{font-family:'DM Serif Display',serif;font-size:17px;color:var(--g100);}
-  .sb-brand .sub2{font-size:11px;color:var(--g300);margin-top:2px;font-weight:300;}
+  .sb-brand{padding:24px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .sb-wm{font-family:'DM Serif Display',serif;font-size:17px;color:var(--g100);}
+  .sb-sub{font-size:11px;color:var(--g300);margin-top:2px;font-weight:300;}
   .sb-nav{padding:12px 10px;flex:1;display:flex;flex-direction:column;gap:2px;}
   .ni{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--rs);color:var(--g200);font-size:13px;cursor:pointer;transition:all .15s;border:none;background:none;width:100%;text-align:left;}
-  .ni:hover{background:rgba(255,255,255,0.08);color:#fff;}
+  .ni:hover{background:rgba(255,255,255,.08);color:#fff;}
   .ni.active{background:var(--g600);color:#fff;font-weight:500;}
   .ni .ic{font-size:15px;width:18px;text-align:center;flex-shrink:0;}
-  .sb-foot{padding:14px;border-top:1px solid rgba(255,255,255,0.08);}
-  .rfbtn2{width:100%;padding:8px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:var(--rs);color:var(--g200);font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;}
-  .rfbtn2:hover{background:rgba(255,255,255,0.14);color:#fff;}
-  .lu2{font-size:10px;color:var(--g300);text-align:center;margin-top:8px;opacity:.7;}
+  .sb-foot{padding:14px;border-top:1px solid rgba(255,255,255,.08);}
+  .rfbtn2{width:100%;padding:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:var(--rs);color:var(--g200);font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;}
+  .rfbtn2:hover{background:rgba(255,255,255,.14);color:#fff;}
+  .lu2{font-size:10px;color:var(--g300);text-align:center;margin-top:6px;opacity:.7;}
 }
 @media(max-width:767px){
-  .sidebar-desktop{display:none;}
-  .two-col{display:block;}
-  .two-col .card{margin-bottom:14px;}
+  .sidebar-desk,.two-col.keep,.three-col{display:block;}
+  .two-col .card,.three-col .card{margin-bottom:14px;}
 }
 </style>
 </head>
 <body>
 
-<!-- Auth -->
 <div id="auth-screen" class="auth-screen">
   <div class="auth-card">
     <div style="font-size:40px;margin-bottom:12px">🌱</div>
@@ -188,47 +177,35 @@ tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
-<!-- App -->
 <div id="app" class="hidden">
 <div class="app-shell">
 
-  <!-- Desktop sidebar -->
-  <aside class="sidebar-desktop">
+  <aside class="sidebar-desk">
     <div class="sb-brand">
-      <div class="wm">Garden 2026</div>
-      <div class="sub2">Lake Mary · Zone 9b</div>
+      <div class="sb-wm">Garden 2026</div>
+      <div class="sb-sub">Lake Mary · Zone 9b</div>
     </div>
     <nav class="sb-nav">
       <button class="ni active" onclick="showPage('overview',this)"><span class="ic">◈</span> Overview</button>
       <button class="ni" onclick="showPage('plants',this)"><span class="ic">⚘</span> Plant health</button>
+      <button class="ni" onclick="showPage('timeline',this)"><span class="ic">◷</span> Timeline</button>
       <button class="ni" onclick="showPage('harvest',this)"><span class="ic">◎</span> Harvest log</button>
       <button class="ni" onclick="showPage('financials',this)"><span class="ic">◉</span> Financials</button>
       <button class="ni" onclick="showPage('care',this)"><span class="ic">◐</span> Care log</button>
     </nav>
     <div class="sb-foot">
-      <button class="rfbtn2" onclick="loadAll()">↻ Refresh data</button>
+      <button class="rfbtn2" onclick="loadAll()">↻ Refresh</button>
       <div class="lu2" id="lu-desk">Not loaded</div>
-      <div style="margin-top:10px;text-align:center">
-        <button class="rfbtn2" style="font-size:11px;opacity:.7" onclick="signOut()">Sign out</button>
-      </div>
+      <div style="margin-top:8px;text-align:center"><button class="rfbtn2" style="font-size:11px;opacity:.7" onclick="signOut()">Sign out</button></div>
     </div>
   </aside>
 
-  <!-- Content -->
   <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
-
-    <!-- Mobile top bar -->
     <div class="top-bar">
-      <div>
-        <div class="brand">Garden 2026</div>
-        <div class="sub">Lake Mary · Zone 9b</div>
-      </div>
-      <div class="top-bar-right">
-        <div>
-          <button class="rfbtn" onclick="loadAll()">↻</button>
-          <div class="lu" id="lu-mob">—</div>
-        </div>
-        <button class="rfbtn" onclick="signOut()" style="font-size:11px">Out</button>
+      <div><div class="brand">Garden 2026</div><div class="sub">Lake Mary · Zone 9b</div></div>
+      <div class="top-right">
+        <button class="rfbtn" onclick="loadAll()">↻</button>
+        <button class="rfbtn" style="font-size:11px" onclick="signOut()">Out</button>
       </div>
     </div>
 
@@ -236,17 +213,29 @@ tr:last-child td{border-bottom:none;}
 
       <!-- OVERVIEW -->
       <div id="page-overview" class="page active">
-        <div class="ph"><h1>Overview</h1><p>Live from Google Sheets</p></div>
-        <div id="kpis" class="kpi-grid"><div class="kpi" style="grid-column:1/-1"><div class="spin"></div><p style="text-align:center;color:var(--muted);font-size:13px">Loading…</p></div></div>
+        <div class="ph"><h1>Overview</h1><p id="overview-date">—</p></div>
+        <div id="kpis" class="kpi-grid"><div class="kpi" style="grid-column:1/-1"><div class="spin"></div></div></div>
         <div class="two-col">
-          <div class="card"><div class="ct">⚠ Germination watchlist</div><div id="watchlist"></div></div>
-          <div class="card"><div class="ct">◑ Spend by category</div><div id="spend-bars"></div></div>
+          <div class="card">
+            <div class="ct">Garden health score</div>
+            <div id="health-score"></div>
+          </div>
+          <div class="card">
+            <div class="ct">Variety diversity</div>
+            <div id="diversity"></div>
+          </div>
         </div>
-        <div class="card"><div class="ct">⊕ Status breakdown</div><div id="status-bars"></div></div>
-        <div class="card"><div class="ct">◷ Recently planted</div><div id="recent-plants"></div></div>
+        <div class="card">
+          <div class="ct">Smart alerts <span id="alert-count" style="background:var(--red);color:#fff;font-size:10px;padding:1px 7px;border-radius:10px;font-weight:600"></span></div>
+          <div id="alerts"></div>
+        </div>
+        <div class="two-col">
+          <div class="card"><div class="ct">Spend by category</div><div id="spend-bars"></div></div>
+          <div class="card"><div class="ct">Status breakdown</div><div id="status-bars"></div></div>
+        </div>
       </div>
 
-      <!-- PLANTS -->
+      <!-- PLANT HEALTH -->
       <div id="page-plants" class="page">
         <div class="ph-row">
           <h1>Plant health</h1>
@@ -254,7 +243,7 @@ tr:last-child td{border-bottom:none;}
         </div>
         <div class="fb">
           <input type="text" id="search" placeholder="Search…" oninput="renderPlants()">
-          <select id="ftype" onchange="renderPlants()"><option value="">All types</option><option>Seed</option><option>Transplant</option></select>
+          <select id="ftype" onchange="renderPlants()"><option value="">All</option><option>Seed</option><option>Transplant</option></select>
           <select id="fstatus" onchange="renderPlants()">
             <option value="">All statuses</option>
             <option>Germinating</option><option>Sprouted</option><option>Seedling</option>
@@ -266,9 +255,26 @@ tr:last-child td{border-bottom:none;}
         <div class="card" style="padding:0"><div class="tw"><div id="plants-table"></div></div></div>
       </div>
 
+      <!-- TIMELINE -->
+      <div id="page-timeline" class="page">
+        <div class="ph"><h1>Timeline</h1><p>What to expect and when</p></div>
+        <div class="card">
+          <div class="ct">Upcoming — next 60 days</div>
+          <div id="timeline-upcoming"></div>
+        </div>
+        <div class="card">
+          <div class="ct">Expected harvest windows</div>
+          <div id="timeline-harvest"></div>
+        </div>
+        <div class="card">
+          <div class="ct">Succession gaps</div>
+          <div id="succession-gaps"></div>
+        </div>
+      </div>
+
       <!-- HARVEST -->
       <div id="page-harvest" class="page">
-        <div class="ph"><h1>Harvest log</h1><p>Track what you're pulling</p></div>
+        <div class="ph"><h1>Harvest log</h1><p>What you've pulled from the garden</p></div>
         <div class="card">
           <div class="ct">Log a harvest</div>
           <div class="fg2">
@@ -292,23 +298,27 @@ tr:last-child td{border-bottom:none;}
 
       <!-- FINANCIALS -->
       <div id="page-financials" class="page">
-        <div class="ph"><h1>Financials</h1><p>Cost breakdown</p></div>
+        <div class="ph"><h1>Financials</h1><p>Investment breakdown and efficiency</p></div>
         <div id="fin-kpis" class="kpi-grid"></div>
         <div class="two-col">
           <div class="card"><div class="ct">By category</div><div id="fin-cats"></div></div>
           <div class="card"><div class="ct">Top items</div><div id="fin-top"></div></div>
+        </div>
+        <div class="card">
+          <div class="ct">Cost efficiency by plant</div>
+          <div id="fin-efficiency"></div>
         </div>
         <div class="card" style="padding:0"><div class="tw"><div id="fin-table"></div></div></div>
       </div>
 
       <!-- CARE -->
       <div id="page-care" class="page">
-        <div class="ph"><h1>Care log</h1><p>Watering, feeding, soil</p></div>
+        <div class="ph"><h1>Care log</h1><p>Fertilizing, soil, treatments</p></div>
         <div class="card">
           <div class="ct">Log activity</div>
           <div class="fg2">
             <div class="fgrp"><label>Plant</label><input type="text" id="c-plant" list="plant-list" placeholder="Plant or All"></div>
-            <div class="fgrp"><label>Activity</label><select id="c-type"><option>Watering</option><option>Fertilizing</option><option>Soil change</option><option>Repotting</option><option>Pruning</option><option>Pest treatment</option><option>Top dressing</option><option>Other</option></select></div>
+            <div class="fgrp"><label>Activity</label><select id="c-type"><option>Fertilizing</option><option>Soil change</option><option>Repotting</option><option>Pruning</option><option>Pest treatment</option><option>Top dressing</option><option>Disease treatment</option><option>Other</option></select></div>
             <div class="fgrp"><label>Date</label><input type="date" id="c-date"></div>
             <div class="fgrp"><label>Product</label><input type="text" id="c-product" placeholder="e.g. Miracle-Gro"></div>
             <div class="fgrp" style="grid-column:span 2"><label>Notes</label><input type="text" id="c-notes" placeholder="Amount, observations…"></div>
@@ -316,24 +326,22 @@ tr:last-child td{border-bottom:none;}
           <button class="btn bp" onclick="logCare()">Log activity</button>
         </div>
         <div class="two-col">
-          <div class="card"><div class="ct">Reminders</div><div id="reminders-list"></div></div>
-          <div class="card"><div class="ct">Summary</div><div id="care-summary"></div></div>
+          <div class="card"><div class="ct">Activity summary</div><div id="care-summary"></div></div>
+          <div class="card"><div class="ct">Pest / disease flags</div><div id="pest-flags"></div></div>
         </div>
         <div class="card" style="padding:0"><div class="tw"><div id="care-table"></div></div></div>
       </div>
 
-    </div><!-- scroll-area -->
+    </div>
   </div>
 
-  <!-- Mobile bottom nav -->
   <nav class="bottom-nav">
     <button class="bn-item active" onclick="showPage('overview',this)"><span class="bn-icon">◈</span><span class="bn-label">Overview</span></button>
     <button class="bn-item" onclick="showPage('plants',this)"><span class="bn-icon">⚘</span><span class="bn-label">Plants</span></button>
+    <button class="bn-item" onclick="showPage('timeline',this)"><span class="bn-icon">◷</span><span class="bn-label">Timeline</span></button>
     <button class="bn-item" onclick="showPage('harvest',this)"><span class="bn-icon">◎</span><span class="bn-label">Harvest</span></button>
     <button class="bn-item" onclick="showPage('financials',this)"><span class="bn-icon">◉</span><span class="bn-label">Costs</span></button>
-    <button class="bn-item" onclick="showPage('care',this)"><span class="bn-icon">◐</span><span class="bn-label">Care</span></button>
   </nav>
-
 </div>
 </div>
 
@@ -343,11 +351,11 @@ tr:last-child td{border-bottom:none;}
     <div class="modal-handle"></div>
     <h3 id="modal-title">Add plant</h3>
     <div class="fg2">
-      <div class="fgrp" style="grid-column:span 2"><label>Plant name</label><input type="text" id="m-plant" placeholder="e.g. Basil"></div>
+      <div class="fgrp" style="grid-column:span 2"><label>Plant name</label><input type="text" id="m-plant" placeholder="Start typing…" list="plant-list" oninput="autoFillPlantData()"></div>
       <div class="fgrp"><label>Type</label><select id="m-type"><option>Seed</option><option>Transplant</option></select></div>
       <div class="fgrp"><label>Date planted</label><input type="date" id="m-date"></div>
       <div class="fgrp"><label>Qty</label><input type="number" id="m-qty" value="1" min="1"></div>
-      <div class="fgrp"><label>Exp germ days</label><input type="number" id="m-germ" placeholder="e.g. 14" min="0"></div>
+      <div class="fgrp"><label>Exp germ days <span id="germ-auto" style="font-size:10px;color:var(--g600);font-weight:400;text-transform:none;letter-spacing:0"></span></label><input type="number" id="m-germ" placeholder="Auto-filled" min="0"></div>
       <div class="fgrp" style="grid-column:span 2"><label>Container</label><input type="text" id="m-container" placeholder="e.g. 3.5in pot"></div>
       <div class="fgrp" style="grid-column:span 2"><label>Location</label><input type="text" id="m-location" placeholder="e.g. Back patio row 2"></div>
       <div class="fgrp"><label>Germ method</label><select id="m-method"><option>Seed Tray</option><option>Direct Sow</option><option>Paper Towel</option><option>Nursery Transplant</option><option>Cutting</option><option>Other</option></select></div>
@@ -356,9 +364,22 @@ tr:last-child td{border-bottom:none;}
       <div class="fgrp" style="grid-column:span 2"><label>Notes</label><input type="text" id="m-notes" placeholder="Any notes…"></div>
     </div>
     <div class="modal-btns">
-      <button class="btn bdr" id="modal-delete-btn" onclick="deletePlant()">Delete row</button>
+      <button class="btn bdr" id="modal-delete-btn" onclick="deletePlant()">Delete</button>
       <button class="btn bg2" onclick="closeModal()">Cancel</button>
-      <button class="btn bp" id="modal-save-btn" onclick="savePlant()">Save plant</button>
+      <button class="btn bp" id="modal-save-btn" onclick="savePlant()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Quick status modal -->
+<div id="status-modal" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3 id="status-modal-title">Update status</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Tap to set the current growth stage</p>
+    <div class="status-tap" id="status-options"></div>
+    <div class="modal-btns">
+      <button class="btn bg2" onclick="closeStatusModal()">Cancel</button>
     </div>
   </div>
 </div>
@@ -372,75 +393,108 @@ const SHEET_ID='10W5EfL9dLcon3WpFUHzv33MvzD0tsYQPzl0V0BWq3Lo';
 const SCOPES='https://www.googleapis.com/auth/spreadsheets';
 const BASE='https://sheets.googleapis.com/v4/spreadsheets/';
 
-let accessToken=null,plants=[],costs=[],editingRow=null;
+let accessToken=null,plants=[],costs=[],editingRow=null,statusEditRow=null;
 let harvests=JSON.parse(localStorage.getItem('g26_harvests')||'[]');
 let careLogs=JSON.parse(localStorage.getItem('g26_care')||'[]');
 
-const SC={'Germinating':{bg:'#FFF9C4',fg:'#F57F17'},'Sprouted':{bg:'#DCEDC8',fg:'#33691E'},'Seedling':{bg:'#B9F6CA',fg:'#1B5E20'},'Transplanted':{bg:'#B3E5FC',fg:'#01579B'},'Growing':{bg:'#C8E6C9',fg:'#2E7D32'},'Flowering':{bg:'#F8BBD9',fg:'#880E4F'},'Fruiting/Harvesting':{bg:'#FFE0B2',fg:'#E65100'},'Dormant':{bg:'#ECEFF1',fg:'#546E7A'},'Dead':{bg:'#FFCDD2',fg:'#B71C1C'}};
-const CC=['#2E7D32','#1565C0','#E65100','#6A1B9A','#00695C'];
-const CARE_C={Watering:'#1565C0',Fertilizing:'#2E7D32','Soil change':'#6A1B9A',Repotting:'#E65100',Pruning:'#00695C','Pest treatment':'#B71C1C','Top dressing':'#795548',Other:'#546E7A'};
+// ── Plant knowledge base — germination days + days to maturity (Zone 9b) ──
+const PLANT_DB = {
+  // Herbs
+  'basil':{germ:7,dtm:30,cat:'Herb'},'oregano':{germ:10,dtm:80,cat:'Herb'},
+  'thyme':{germ:14,dtm:90,cat:'Herb'},'parsley':{germ:21,dtm:70,cat:'Herb'},
+  'dill':{germ:10,dtm:40,cat:'Herb'},'cilantro':{germ:10,dtm:45,cat:'Herb'},
+  'culantro':{germ:14,dtm:60,cat:'Herb'},'mint':{germ:14,dtm:60,cat:'Herb'},
+  'sweet mint':{germ:14,dtm:60,cat:'Herb'},'lavender':{germ:21,dtm:90,cat:'Herb'},
+  'rosemary':{germ:21,dtm:90,cat:'Herb'},'sage':{germ:14,dtm:75,cat:'Herb'},
+  'chives':{germ:10,dtm:60,cat:'Herb'},'lemongrass':{germ:21,dtm:75,cat:'Herb'},
+  // Peppers
+  'jalapenos':{germ:14,dtm:75,cat:'Pepper'},'jalapeno':{germ:14,dtm:75,cat:'Pepper'},
+  'serrano':{germ:14,dtm:80,cat:'Pepper'},'cachucha':{germ:14,dtm:70,cat:'Pepper'},
+  'hot pepper mix':{germ:14,dtm:80,cat:'Pepper'},'mini sweet peppers':{germ:14,dtm:70,cat:'Pepper'},
+  'sweet pepper':{germ:14,dtm:70,cat:'Pepper'},'green bell pepper':{germ:14,dtm:75,cat:'Pepper'},
+  'bell pepper':{germ:14,dtm:75,cat:'Pepper'},'habanero':{germ:21,dtm:90,cat:'Pepper'},
+  'cayenne':{germ:14,dtm:80,cat:'Pepper'},'poblano':{germ:14,dtm:75,cat:'Pepper'},
+  // Tomatoes
+  'roma tomatoes':{germ:10,dtm:75,cat:'Tomato'},'cherry tomato':{germ:10,dtm:60,cat:'Tomato'},
+  'cherry tomatoes':{germ:10,dtm:60,cat:'Tomato'},'tomato':{germ:10,dtm:75,cat:'Tomato'},
+  'beefsteak tomato':{germ:10,dtm:80,cat:'Tomato'},'grape tomato':{germ:10,dtm:60,cat:'Tomato'},
+  // Cucurbits
+  'cucumber':{germ:7,dtm:55,cat:'Cucurbit'},'cucamelon':{germ:10,dtm:70,cat:'Cucurbit'},
+  'crookneck squash':{germ:7,dtm:50,cat:'Cucurbit'},'pumpkin':{germ:7,dtm:90,cat:'Cucurbit'},
+  'sugar pie pumpkin':{germ:7,dtm:100,cat:'Cucurbit'},'cantaloupe':{germ:7,dtm:80,cat:'Cucurbit'},
+  'icebox watermelon':{germ:7,dtm:75,cat:'Cucurbit'},'watermelon':{germ:7,dtm:80,cat:'Cucurbit'},
+  'zucchini':{germ:7,dtm:50,cat:'Cucurbit'},'butternut squash':{germ:7,dtm:85,cat:'Cucurbit'},
+  // Greens & Veggies
+  'red malabar spinach':{germ:14,dtm:50,cat:'Green'},'malabar spinach':{germ:14,dtm:50,cat:'Green'},
+  'eggplant':{germ:14,dtm:70,cat:'Veggie'},'onion':{germ:10,dtm:100,cat:'Veggie'},
+  'carrot':{germ:14,dtm:70,cat:'Veggie'},'string beans':{germ:7,dtm:55,cat:'Veggie'},
+  'green beans':{germ:7,dtm:55,cat:'Veggie'},'okra':{germ:10,dtm:55,cat:'Veggie'},
+  'sweet potato':{germ:14,dtm:90,cat:'Veggie'},'lettuce':{germ:7,dtm:45,cat:'Green'},
+  'kale':{germ:7,dtm:55,cat:'Green'},'mustard':{germ:7,dtm:40,cat:'Green'},
+  // Fruits & Exotic
+  'cape gooseberry':{germ:21,dtm:120,cat:'Fruit'},'sugar cane':{germ:21,dtm:365,cat:'Exotic'},
+  'hass avocado':{germ:30,dtm:730,cat:'Exotic'},'lemon':{germ:30,dtm:365,cat:'Fruit'},
+  'strawberry':{germ:21,dtm:90,cat:'Fruit'},'passion fruit':{germ:21,dtm:365,cat:'Exotic'},
+  // Flowers
+  'marigolds':{germ:7,dtm:45,cat:'Flower'},'marigold':{germ:7,dtm:45,cat:'Flower'},
+  'nasturtium':{germ:10,dtm:35,cat:'Flower'},'african daisy':{germ:14,dtm:60,cat:'Flower'},
+  'wildflower':{germ:14,dtm:60,cat:'Flower'},'sunflower':{germ:10,dtm:70,cat:'Flower'},
+  'zinnia':{germ:7,dtm:55,cat:'Flower'},'cosmos':{germ:7,dtm:60,cat:'Flower'},
+};
 
+function lookupPlant(name){
+  if(!name)return null;
+  return PLANT_DB[name.toLowerCase().trim()]||null;
+}
+
+const SC={'Germinating':{bg:'#FFF9C4',fg:'#F57F17'},'Sprouted':{bg:'#DCEDC8',fg:'#33691E'},'Seedling':{bg:'#B9F6CA',fg:'#1B5E20'},'Transplanted':{bg:'#B3E5FC',fg:'#01579B'},'Growing':{bg:'#C8E6C9',fg:'#2E7D32'},'Flowering':{bg:'#F8BBD9',fg:'#880E4F'},'Fruiting/Harvesting':{bg:'#FFE0B2',fg:'#E65100'},'Dormant':{bg:'#ECEFF1',fg:'#546E7A'},'Dead':{bg:'#FFCDD2',fg:'#B71C1C'}};
+const STATUSES=['Germinating','Sprouted','Seedling','Transplanted','Growing','Flowering','Fruiting/Harvesting','Dormant','Dead'];
+const CC=['#2E7D32','#1565C0','#E65100','#6A1B9A','#00695C'];
+const CARE_C={Fertilizing:'#2E7D32','Soil change':'#6A1B9A',Repotting:'#E65100',Pruning:'#00695C','Pest treatment':'#B71C1C','Top dressing':'#795548','Disease treatment':'#880E4F',Other:'#546E7A'};
+const CAT_COLORS={'Herb':'#2E7D32','Pepper':'#B71C1C','Tomato':'#E65100','Cucurbit':'#1565C0','Green':'#388E3C','Veggie':'#00695C','Fruit':'#880E4F','Flower':'#F06292','Exotic':'#6A1B9A'};
+
+// ── Auth ──
 window.onload=function(){
   google.accounts.id.initialize({client_id:CLIENT_ID,callback:handleCredential,auto_select:true});
   google.accounts.id.renderButton(document.getElementById('g-signin-btn'),{theme:'outline',size:'large',width:280});
   const saved=localStorage.getItem('g26_token'),exp=localStorage.getItem('g26_token_exp');
   if(saved&&exp&&Date.now()<parseInt(exp)){accessToken=saved;showApp();}
-  else{requestToken();}
+  else requestToken();
 };
-
 function requestToken(){
-  const c=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:SCOPES,callback:(r)=>{
-    if(r.access_token){accessToken=r.access_token;localStorage.setItem('g26_token',accessToken);localStorage.setItem('g26_token_exp',Date.now()+(r.expires_in-60)*1000);showApp();}
-  }});
+  const c=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:SCOPES,callback:(r)=>{if(r.access_token){accessToken=r.access_token;localStorage.setItem('g26_token',accessToken);localStorage.setItem('g26_token_exp',Date.now()+(r.expires_in-60)*1000);showApp();}}});
   c.requestAccessToken({prompt:''});
 }
-
 function handleCredential(){requestToken();}
-
 function showApp(){
   document.getElementById('auth-screen').classList.add('hidden');
   document.getElementById('app').classList.remove('hidden');
+  document.getElementById('overview-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
   loadAll();
   setInterval(loadAll,5*60*1000);
   let sl=300;
-  setInterval(()=>{
-    sl--;if(sl<=0)sl=300;
-    const m=Math.floor(sl/60),s=sl%60,t=m+':'+String(s).padStart(2,'0');
-    ['lu-mob','lu-desk'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.textContent.startsWith('Refresh')&&!el.textContent.startsWith('Error')){const b=el.textContent.split(' ·')[0];el.textContent=b+' · '+t;}});
-  },1000);
+  setInterval(()=>{sl--;if(sl<=0)sl=300;const m=Math.floor(sl/60),s=sl%60,t=m+':'+String(s).padStart(2,'0');['lu-desk'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.textContent.startsWith('Ref')&&!el.textContent.startsWith('Err')){const b=el.textContent.split(' ·')[0];el.textContent=b+' · '+t;}});},1000);
 }
+function signOut(){google.accounts.id.disableAutoSelect();localStorage.removeItem('g26_token');localStorage.removeItem('g26_token_exp');accessToken=null;document.getElementById('app').classList.add('hidden');document.getElementById('auth-screen').classList.remove('hidden');}
 
-function signOut(){
-  google.accounts.id.disableAutoSelect();
-  localStorage.removeItem('g26_token');localStorage.removeItem('g26_token_exp');
-  accessToken=null;
-  document.getElementById('app').classList.add('hidden');
-  document.getElementById('auth-screen').classList.remove('hidden');
-}
-
+// ── API ──
 async function apiGet(sheet,range){
-  if(!accessToken)throw new Error('Not authenticated');
   const url=BASE+SHEET_ID+'/values/'+encodeURIComponent(sheet)+'!'+range+'?access_token='+accessToken;
   const res=await fetch(url);
   if(res.status===401){requestToken();throw new Error('Token expired');}
   if(!res.ok)throw new Error('HTTP '+res.status);
   return(await res.json()).values||[];
 }
-
 async function apiAppend(sheet,values){
   const url=BASE+SHEET_ID+'/values/'+encodeURIComponent(sheet)+'!A1:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS&access_token='+accessToken;
   const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({values})});
-  if(!res.ok)throw new Error('HTTP '+res.status);
-  return res.json();
+  if(!res.ok)throw new Error('HTTP '+res.status);return res.json();
 }
-
 async function apiUpdate(sheet,range,values){
   const url=BASE+SHEET_ID+'/values/'+encodeURIComponent(sheet)+'!'+range+'?valueInputOption=USER_ENTERED&access_token='+accessToken;
   const res=await fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({values})});
-  if(!res.ok)throw new Error('HTTP '+res.status);
-  return res.json();
+  if(!res.ok)throw new Error('HTTP '+res.status);return res.json();
 }
-
 let sheetIdCache={};
 async function getSheetId(name){
   if(sheetIdCache[name])return sheetIdCache[name];
@@ -449,63 +503,152 @@ async function getSheetId(name){
   data.sheets.forEach(s=>{sheetIdCache[s.properties.title]=s.properties.sheetId;});
   return sheetIdCache[name];
 }
-
-async function apiDelete(sheet,rowIndex){
+async function apiDelete(sheet,rowIdx){
   const url=BASE+SHEET_ID+':batchUpdate?access_token='+accessToken;
-  const sheetId=await getSheetId(sheet);
-  const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({requests:[{deleteDimension:{range:{sheetId,dimension:'ROWS',startIndex:rowIndex,endIndex:rowIndex+1}}}]})});
-  if(!res.ok)throw new Error('HTTP '+res.status);
-  return res.json();
+  const sid=await getSheetId(sheet);
+  const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({requests:[{deleteDimension:{range:{sheetId:sid,dimension:'ROWS',startIndex:rowIdx,endIndex:rowIdx+1}}}]})});
+  if(!res.ok)throw new Error('HTTP '+res.status);return res.json();
 }
 
 function clean(v){return parseFloat((v||'0').toString().replace(/[$,]/g,''))||0;}
 function cleani(v){return parseInt((v||'0').toString().replace(/[$,]/g,''))||0;}
 function calcDays(ds){if(!ds)return 0;const d=new Date(ds);return isNaN(d)?0:Math.floor((Date.now()-d.getTime())/86400000);}
+function addDays(ds,n){const d=new Date(ds);d.setDate(d.getDate()+n);return d;}
+function fmtDate(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
+function fmtDateFull(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
 
 async function loadAll(){
-  ['lu-mob','lu-desk'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='Refreshing…';});
+  const lu=document.getElementById('lu-desk');if(lu)lu.textContent='Refreshing…';
   try{
     const[pr,cr]=await Promise.all([apiGet('Plant Log','A2:M100'),apiGet('Costs','A2:E100')]);
     plants=pr.filter(r=>r[0]&&r[0]!=='TOTAL').map((r,i)=>({
       _row:i+2,plant:r[0]||'',type:r[1]||'',date:r[2]||'',qty:cleani(r[3]),
       container:r[4]||'',location:r[5]||'',method:r[6]||'',expGerm:cleani(r[7]),
       status:r[8]||'',daysSince:r[9]?cleani(r[9]):calcDays(r[2]),
-      costUnit:clean(r[10]),totalCost:clean(r[11]),notes:r[12]||''
+      costUnit:clean(r[10]),totalCost:clean(r[11]),notes:r[12]||'',
+      _info:lookupPlant(r[0])
     }));
     costs=cr.filter(r=>r[0]&&r[0]!=='TOTAL').map(r=>({category:r[0]||'',item:r[1]||'',cost:clean(r[2]),qty:cleani(r[3]),perUnit:clean(r[4])}));
     const t=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-    ['lu-mob','lu-desk'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=t;});
-    populatePlantDatalist();renderAll();toast('Refreshed');
-  }catch(e){
-    ['lu-mob','lu-desk'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='Error';});
-    toast('Error: '+e.message);
-  }
+    if(lu)lu.textContent=t;
+    document.getElementById('plant-list').innerHTML=[...new Set(plants.map(p=>p.plant))].sort().map(n=>'<option value="'+n+'">').join('');
+    renderAll();toast('Refreshed');
+  }catch(e){if(lu)lu.textContent='Error';toast('Error: '+e.message);}
 }
 
-function populatePlantDatalist(){
-  document.getElementById('plant-list').innerHTML=[...new Set(plants.map(p=>p.plant))].sort().map(n=>'<option value="'+n+'">').join('');
-}
+function renderAll(){renderKPIs();renderHealthScore();renderDiversity();renderAlerts();renderSpendBars();renderStatusBars();renderPlants();renderTimeline();renderHarvestTable();renderFinancials();renderCareTable();renderCareSummary();renderPestFlags();}
 
-function renderAll(){renderKPIs();renderWatchlist();renderSpendBars();renderStatusBars();renderRecentPlants();renderPlants();renderHarvestTable();renderFinancials();renderCareTable();renderReminders();renderCareSummary();}
-
-function kpi(lbl,val,sub,col){return'<div class="kpi '+col+'"><div class="kpi-lbl">'+lbl+'</div><div class="kpi-val">'+val+'</div><div class="kpi-sub">'+sub+'</div></div>';}
+function kpi(l,v,s,c){return'<div class="kpi '+c+'"><div class="kpi-lbl">'+l+'</div><div class="kpi-val">'+v+'</div><div class="kpi-sub">'+s+'</div></div>';}
 
 function renderKPIs(){
-  const tp=plants.reduce((s,r)=>s+r.qty,0),ts=costs.reduce((s,r)=>s+r.cost,0),sp=new Set(plants.map(r=>r.plant)).size;
+  const tp=plants.reduce((s,r)=>s+r.qty,0),ts=costs.reduce((s,r)=>s+r.cost,0);
+  const sp=new Set(plants.map(r=>r.plant)).size;
   const ov=plants.filter(r=>r.type==='Seed'&&r.expGerm>0&&r.daysSince>=r.expGerm&&(!r.status||r.status==='Germinating')).length;
-  const ws=plants.filter(r=>r.status).length;
+  // Germination rate
+  const seedBatches=plants.filter(r=>r.type==='Seed');
+  const germinated=seedBatches.filter(r=>r.status&&r.status!=='Germinating'&&r.status!=='').length;
+  const germRate=seedBatches.length>0?Math.round(germinated/seedBatches.length*100):0;
+  // Plants ready to harvest
+  const ready=plants.filter(r=>r.status==='Fruiting/Harvesting').length;
   document.getElementById('kpis').innerHTML=[
-    kpi('Plants',tp,'seeds + transplants','green'),
+    kpi('Total plants',tp,'seeds + transplants','green'),
     kpi('Invested','$'+ts.toFixed(2),'total spend','blue'),
-    kpi('Species',sp,'varieties','teal'),
+    kpi('Germ rate',germRate+'%',germinated+' of '+seedBatches.length+' batches',germRate>60?'teal':'amber'),
     kpi('Overdue',ov,'need attention',ov>0?'red':'green'),
+    kpi('Harvesting',ready,'active producers',ready>0?'amber':'teal'),
+    kpi('Species',sp,'varieties','purple'),
   ].join('');
 }
 
-function renderWatchlist(){
-  const ov=plants.filter(r=>r.type==='Seed'&&r.expGerm>0&&r.daysSince>=r.expGerm&&(!r.status||r.status==='Germinating')).sort((a,b)=>(b.daysSince-b.expGerm)-(a.daysSince-a.expGerm));
-  if(!ov.length){document.getElementById('watchlist').innerHTML='<div class="empty" style="color:var(--g600)">✓ No overdue seeds</div>';return;}
-  document.getElementById('watchlist').innerHTML=ov.map(r=>{const o=r.daysSince-r.expGerm;return'<div class="wi-item"><div><div class="wi-name">'+r.plant+'</div><div class="wi-meta">Planted '+r.date+' · Exp '+r.expGerm+'d</div></div><span class="ot">+'+o+'d</span></div>';}).join('');
+function renderHealthScore(){
+  const seedBatches=plants.filter(r=>r.type==='Seed');
+  const germinated=seedBatches.filter(r=>r.status&&r.status!=='Germinating'&&r.status!=='').length;
+  const germRate=seedBatches.length>0?germinated/seedBatches.length:1;
+  const overdue=plants.filter(r=>r.type==='Seed'&&r.expGerm>0&&r.daysSince>=r.expGerm&&(!r.status||r.status==='Germinating')).length;
+  const overdueScore=Math.max(0,1-overdue/Math.max(plants.length,1));
+  const withStatus=plants.filter(r=>r.status).length;
+  const trackingScore=plants.length>0?withStatus/plants.length:0;
+  const dead=plants.filter(r=>r.status==='Dead').length;
+  const viabilityScore=Math.max(0,1-dead/Math.max(plants.length,1));
+  const score=Math.round((germRate*0.3+overdueScore*0.3+trackingScore*0.2+viabilityScore*0.2)*100);
+  const color=score>=80?'#2E7D32':score>=60?'#E65100':'#B71C1C';
+  const label=score>=80?'Thriving':score>=60?'Good':'Needs attention';
+  const r=36,circ=2*Math.PI*r,dash=circ*(score/100);
+  document.getElementById('health-score').innerHTML=`
+    <div class="health-ring">
+      <div class="ring-wrap">
+        <svg width="80" height="80" viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r="${r}" fill="none" stroke="#E8F5E9" stroke-width="7"/>
+          <circle cx="40" cy="40" r="${r}" fill="none" stroke="${color}" stroke-width="7" stroke-dasharray="${dash} ${circ}" stroke-linecap="round"/>
+        </svg>
+        <div class="ring-label"><div class="ring-score">${score}</div><div class="ring-sub">/ 100</div></div>
+      </div>
+      <div style="font-size:13px;font-weight:500;text-align:center;color:${color}">${label}</div>
+    </div>
+    <div style="margin-top:12px">
+      ${scoreRow('Germination rate',Math.round(germRate*100)+'%',germRate>=0.6)}
+      ${scoreRow('No overdue seeds',overdue===0?'✓':overdue+' overdue',overdue===0)}
+      ${scoreRow('Status tracking',Math.round(trackingScore*100)+'%',trackingScore>=0.5)}
+      ${scoreRow('Plant viability',Math.round(viabilityScore*100)+'%',viabilityScore>=0.8)}
+    </div>`;
+}
+
+function scoreRow(label,val,good){
+  const col=good?'#2E7D32':'#E65100',bg=good?'#E8F5E9':'#FFF3E0';
+  return'<div class="score-row"><span>'+label+'</span><span class="score-pill" style="background:'+bg+';color:'+col+'">'+val+'</span></div>';
+}
+
+function renderDiversity(){
+  const cats={};
+  plants.forEach(r=>{
+    const info=r._info;
+    const cat=info?info.cat:(r.type==='Transplant'?'Transplant':'Other');
+    cats[cat]=(cats[cat]||0)+r.qty;
+  });
+  document.getElementById('diversity').innerHTML='<div class="div-grid">'+
+    Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([c,n])=>{
+      const col=CAT_COLORS[c]||'#888';
+      return'<div class="div-item" style="background:'+col+'15;border:1px solid '+col+'30"><div class="div-num" style="color:'+col+'">'+n+'</div><div class="div-lbl">'+c+'</div></div>';
+    }).join('')+'</div>';
+}
+
+function renderAlerts(){
+  const alerts=[];
+  const today=new Date();
+
+  // Overdue germination
+  plants.filter(r=>r.type==='Seed'&&r.expGerm>0&&r.daysSince>=r.expGerm&&(!r.status||r.status==='Germinating')).forEach(r=>{
+    alerts.push({level:'red',text:r.plant+' overdue by '+(r.daysSince-r.expGerm)+'d',sub:'Check for sprouts or consider reseeding',action:null});
+  });
+
+  // Plants approaching harvest
+  plants.filter(r=>r._info&&r._info.dtm&&r.date).forEach(r=>{
+    const dtm=r._info.dtm;
+    const daysLeft=dtm-r.daysSince;
+    if(daysLeft>=0&&daysLeft<=14&&r.status!=='Fruiting/Harvesting'&&r.status!=='Dead'){
+      alerts.push({level:'amber',text:r.plant+' approaching harvest window',sub:'~'+daysLeft+' days until ready ('+fmtDate(addDays(r.date,dtm))+')',action:null});
+    }
+  });
+
+  // No status set after 7 days
+  plants.filter(r=>r.daysSince>7&&!r.status).forEach(r=>{
+    alerts.push({level:'blue',text:r.plant+' has no status after '+r.daysSince+' days',sub:'Tap Edit to update growth stage',action:null});
+  });
+
+  // Heat stress — plants past 45 days in zone 9b summer without fruiting/harvesting
+  const month=today.getMonth();
+  if(month>=4&&month<=9){
+    plants.filter(r=>r.daysSince>45&&r.status==='Growing'&&r._info&&['Tomato','Pepper'].includes(r._info.cat)).forEach(r=>{
+      alerts.push({level:'amber',text:r.plant+' may be under heat stress',sub:'Zone 9b summer — check for signs of stress or bolting',action:null});
+    });
+  }
+
+  document.getElementById('alert-count').textContent=alerts.length||'';
+  document.getElementById('alert-count').style.display=alerts.length?'':'none';
+
+  if(!alerts.length){document.getElementById('alerts').innerHTML='<div class="empty" style="color:var(--g600)">✓ Garden looks healthy — no alerts</div>';return;}
+  const colors={red:var_red(),amber:'#E65100',blue:var_blue()};
+  document.getElementById('alerts').innerHTML=alerts.map(a=>'<div class="alert-item"><div class="alert-dot" style="background:'+colors[a.level]+'"></div><div><div class="alert-text">'+a.text+'</div><div class="alert-sub">'+a.sub+'</div></div></div>').join('');
 }
 
 function renderSpendBars(){
@@ -515,17 +658,10 @@ function renderSpendBars(){
 }
 
 function renderStatusBars(){
-  const sts=['Germinating','Sprouted','Seedling','Transplanted','Growing','Flowering','Fruiting/Harvesting','Dormant','Dead'];
-  const cnt={};sts.forEach(s=>{cnt[s]=0;});plants.forEach(r=>{if(r.status&&cnt[r.status]!==undefined)cnt[r.status]++;});
+  const cnt={};STATUSES.forEach(s=>{cnt[s]=0;});plants.forEach(r=>{if(r.status&&cnt[r.status]!==undefined)cnt[r.status]++;});
   const tot=plants.length||1;
-  document.getElementById('status-bars').innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px">'+
-    sts.map(s=>{const c=cnt[s],p=c/tot*100,sc=SC[s]||{fg:'#888'};return'<div class="bi"><div class="bm"><span class="bn2" style="font-size:11px">'+s+'</span><span class="bv">'+c+'</span></div><div class="bt2"><div class="bf" style="width:'+p+'%;background:'+sc.fg+'"></div></div></div>';}).join('')+'</div>';
-}
-
-function renderRecentPlants(){
-  const s=[...plants].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,6);
-  document.getElementById('recent-plants').innerHTML='<table><thead><tr><th>Plant</th><th>Type</th><th>Date</th><th>Qty</th></tr></thead><tbody>'+
-    s.map(r=>'<tr><td style="font-weight:500">'+r.plant+'</td><td><span class="badge '+(r.type==='Seed'?'bs':'bt')+'">'+r.type+'</span></td><td>'+r.date+'</td><td>'+r.qty+'</td></tr>').join('')+'</tbody></table>';
+  document.getElementById('status-bars').innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px">'+
+    STATUSES.map(s=>{const c=cnt[s],p=c/tot*100,sc=SC[s];return'<div class="bi"><div class="bm"><span class="bn2" style="font-size:11px">'+s+'</span><span class="bv">'+c+'</span></div><div class="bt2"><div class="bf" style="width:'+p+'%;background:'+sc.fg+'"></div></div></div>';}).join('')+'</div>';
 }
 
 function renderPlants(){
@@ -539,25 +675,110 @@ function renderPlants(){
     return true;
   });
   if(!f.length){document.getElementById('plants-table').innerHTML='<div class="empty">No plants match filters.</div>';return;}
-  document.getElementById('plants-table').innerHTML='<table><thead><tr><th>Plant</th><th>Type</th><th>Days</th><th>Status</th><th></th></tr></thead><tbody>'+
+  document.getElementById('plants-table').innerHTML='<table><thead><tr><th>Plant</th><th>Days</th><th>Status</th><th>Harvest</th><th></th></tr></thead><tbody>'+
     f.map(r=>{
       const ov=r.type==='Seed'&&r.expGerm>0&&r.daysSince>=r.expGerm&&(!r.status||r.status==='Germinating');
       const sc=SC[r.status];
-      const sb=r.status?'<span class="sp" style="background:'+sc.bg+';color:'+sc.fg+'">'+r.status+'</span>':'<span style="color:var(--muted);font-size:11px">—</span>';
-      return'<tr><td style="font-weight:500">'+r.plant+'</td><td><span class="badge '+(r.type==='Seed'?'bs':'bt')+'">'+r.type+'</span></td><td style="'+(ov?'color:var(--red);font-weight:600':'')+'">'+r.daysSince+'d'+(ov?' ⚠':'')+'</td><td>'+sb+'</td><td><button class="btn bg2 bsm" onclick="openEditPlant('+r._row+')">Edit</button></td></tr>';
+      const sb=r.status?'<span class="sp" style="background:'+sc.bg+';color:'+sc.fg+'" onclick="openStatusModal('+r._row+')">'+r.status+'</span>':'<span class="sp" style="background:var(--g50);color:var(--g600);border:1px dashed var(--g200)" onclick="openStatusModal('+r._row+')">set status</span>';
+      // Harvest window
+      let hw='—';
+      if(r._info&&r._info.dtm&&r.date){
+        const dLeft=r._info.dtm-r.daysSince;
+        if(dLeft>0)hw='~'+fmtDate(addDays(r.date,r._info.dtm));
+        else hw='<span style="color:var(--g600);font-weight:500">Ready</span>';
+      }
+      return'<tr><td><div style="font-weight:500;font-size:13px">'+r.plant+'</div><div style="font-size:10px;color:var(--muted)">'+r.qty+' · '+r.container+'</div></td><td style="'+(ov?'color:var(--red);font-weight:600':'color:var(--muted)')+';font-size:12px">'+r.daysSince+'d'+(ov?' ⚠':'')+'</td><td>'+sb+'</td><td style="font-size:12px;color:var(--muted)">'+hw+'</td><td><button class="btn bg2 bsm" onclick="openEditPlant('+r._row+')">Edit</button></td></tr>';
     }).join('')+'</tbody></table>';
+}
+
+// ── Timeline ──
+function renderTimeline(){
+  const today=new Date();
+  const upcoming=[];
+
+  plants.forEach(r=>{
+    if(!r.date)return;
+    const info=r._info;
+
+    // Germination expected
+    if(r.type==='Seed'&&r.expGerm>0&&(!r.status||r.status==='Germinating')){
+      const germDate=addDays(r.date,r.expGerm);
+      const daysAway=Math.round((germDate-today)/86400000);
+      if(daysAway>=-3&&daysAway<=60){
+        upcoming.push({date:germDate,daysAway,label:r.plant+' — germination expected',sub:daysAway<0?Math.abs(daysAway)+'d overdue':daysAway===0?'Today':daysAway+'d away',color:daysAway<0?var_red():'#1565C0',type:'germ'});
+      }
+    }
+
+    // Status transitions
+    if(r.status==='Sprouted'||r.status==='Seedling'){
+      upcoming.push({date:new Date(),daysAway:0,label:r.plant+' — ready to transplant',sub:'Currently '+r.status.toLowerCase(),color:'#00695C',type:'transplant'});
+    }
+  });
+
+  upcoming.sort((a,b)=>a.daysAway-b.daysAway);
+  if(!upcoming.length){document.getElementById('timeline-upcoming').innerHTML='<div class="empty">No upcoming events in the next 60 days.</div>';return;}
+  document.getElementById('timeline-upcoming').innerHTML=upcoming.slice(0,12).map(e=>'<div class="timeline-item"><div class="tl-dot" style="background:'+e.color+'"></div><div style="flex:1"><div class="tl-main">'+e.label+'</div><div class="tl-sub">'+e.sub+'</div></div><div class="tl-date">'+fmtDate(e.date)+'</div></div>').join('');
+
+  // Harvest windows
+  const harvestItems=[];
+  plants.forEach(r=>{
+    if(!r._info||!r._info.dtm||!r.date||r.status==='Dead')return;
+    const harvestDate=addDays(r.date,r._info.dtm);
+    const daysAway=Math.round((harvestDate-today)/86400000);
+    harvestItems.push({plant:r.plant,date:harvestDate,daysAway,status:r.status,cat:r._info.cat});
+  });
+  harvestItems.sort((a,b)=>a.daysAway-b.daysAway);
+  if(!harvestItems.length){document.getElementById('timeline-harvest').innerHTML='<div class="empty">Add plants with dates to see harvest windows.</div>';return;}
+  document.getElementById('timeline-harvest').innerHTML=harvestItems.slice(0,15).map(e=>{
+    const col=e.daysAway<0?'#2E7D32':e.daysAway<14?'#E65100':'#546E7A';
+    const lbl=e.daysAway<0?'Ready now':e.daysAway===0?'Today':'In '+e.daysAway+'d';
+    return'<div class="timeline-item"><div class="tl-dot" style="background:'+col+'"></div><div style="flex:1"><div class="tl-main">'+e.plant+'</div><div class="tl-sub">'+lbl+' · '+e.cat+'</div></div><div class="tl-date">'+fmtDate(e.date)+'</div></div>';
+  }).join('');
+
+  // Succession gaps
+  const cats={};
+  plants.filter(r=>r.status!=='Dead').forEach(r=>{
+    const cat=r._info?r._info.cat:'Other';
+    if(!cats[cat])cats[cat]=[];
+    const dtm=r._info?r._info.dtm:null;
+    if(dtm){const harvestDate=addDays(r.date,dtm);cats[cat].push(Math.round((harvestDate-today)/86400000));}
+  });
+  const gaps=[];
+  Object.entries(cats).forEach(([cat,days])=>{
+    const nextHarvest=Math.min(...days.filter(d=>d>=0));
+    if(nextHarvest===Infinity||nextHarvest>45){
+      gaps.push({cat,next:nextHarvest===Infinity?'None planted':'In '+nextHarvest+'d'});
+    }
+  });
+  if(!gaps.length){document.getElementById('succession-gaps').innerHTML='<div class="empty" style="color:var(--g600)">✓ Good succession coverage across all categories</div>';return;}
+  document.getElementById('succession-gaps').innerHTML=gaps.map(g=>'<div class="timeline-item"><div class="tl-dot" style="background:#E65100"></div><div><div class="tl-main">'+g.cat+' — gap detected</div><div class="tl-sub">Next harvest: '+g.next+' — consider succession planting</div></div></div>').join('');
+}
+
+// ── Plant modal ──
+function autoFillPlantData(){
+  const name=document.getElementById('m-plant').value;
+  const info=lookupPlant(name);
+  const germEl=document.getElementById('m-germ');
+  const autoLabel=document.getElementById('germ-auto');
+  if(info&&info.germ){
+    germEl.value=info.germ;
+    autoLabel.textContent='· auto-filled';
+  } else {
+    autoLabel.textContent='';
+  }
 }
 
 function openAddPlant(){
   editingRow=null;
   document.getElementById('modal-title').textContent='Add plant';
-  document.getElementById('modal-save-btn').textContent='Add plant';
+  document.getElementById('modal-save-btn').textContent='Add';
   document.getElementById('modal-delete-btn').classList.add('hidden');
   ['m-plant','m-container','m-location','m-notes'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('m-type').value='Seed';
   document.getElementById('m-date').value=new Date().toISOString().split('T')[0];
   document.getElementById('m-qty').value='1';document.getElementById('m-method').value='Seed Tray';
   document.getElementById('m-germ').value='';document.getElementById('m-status').value='';document.getElementById('m-cost').value='';
+  document.getElementById('germ-auto').textContent='';
   document.getElementById('plant-modal').classList.remove('hidden');
 }
 
@@ -565,17 +786,16 @@ function openEditPlant(rowNum){
   const r=plants.find(p=>p._row===rowNum);if(!r)return;
   editingRow=rowNum;
   document.getElementById('modal-title').textContent='Edit — '+r.plant;
-  document.getElementById('modal-save-btn').textContent='Save changes';
+  document.getElementById('modal-save-btn').textContent='Save';
   document.getElementById('modal-delete-btn').classList.remove('hidden');
   document.getElementById('m-plant').value=r.plant;document.getElementById('m-type').value=r.type;
   document.getElementById('m-date').value=r.date;document.getElementById('m-qty').value=r.qty;
   document.getElementById('m-container').value=r.container;document.getElementById('m-location').value=r.location;
   document.getElementById('m-method').value=r.method||'Seed Tray';document.getElementById('m-germ').value=r.expGerm||'';
   document.getElementById('m-status').value=r.status||'';document.getElementById('m-cost').value=r.costUnit||'';
-  document.getElementById('m-notes').value=r.notes;
+  document.getElementById('m-notes').value=r.notes;document.getElementById('germ-auto').textContent='';
   document.getElementById('plant-modal').classList.remove('hidden');
 }
-
 function closeModal(){document.getElementById('plant-modal').classList.add('hidden');}
 
 async function savePlant(){
@@ -594,18 +814,45 @@ async function savePlant(){
     else{await apiAppend('Plant Log',[row]);toast('Plant added');}
     closeModal();await loadAll();
   }catch(e){toast('Error: '+e.message);}
-  finally{btn.textContent=editingRow?'Save changes':'Add plant';btn.disabled=false;}
+  finally{btn.textContent='Save';btn.disabled=false;}
 }
 
 async function deletePlant(){
   if(!editingRow)return;
   const r=plants.find(p=>p._row===editingRow);if(!r)return;
-  if(!confirm('Delete "'+r.plant+'"? Cannot be undone.'))return;
-  const btn=document.getElementById('modal-delete-btn');btn.textContent='Deleting…';btn.disabled=true;
+  if(!confirm('Delete "'+r.plant+'"?'))return;
+  const btn=document.getElementById('modal-delete-btn');btn.textContent='…';btn.disabled=true;
   try{await apiDelete('Plant Log',editingRow-1);toast('Deleted');closeModal();await loadAll();}
-  catch(e){toast('Error: '+e.message);btn.textContent='Delete row';btn.disabled=false;}
+  catch(e){toast('Error: '+e.message);btn.textContent='Delete';btn.disabled=false;}
 }
 
+// ── Quick status modal ──
+function openStatusModal(rowNum){
+  const r=plants.find(p=>p._row===rowNum);if(!r)return;
+  statusEditRow=rowNum;
+  document.getElementById('status-modal-title').textContent=r.plant;
+  const opts=document.getElementById('status-options');
+  opts.innerHTML=STATUSES.map(s=>{
+    const sc=SC[s];
+    const active=r.status===s?'active':'';
+    return'<button class="st-btn '+active+'" style="background:'+sc.bg+';color:'+sc.fg+';border-color:'+sc.fg+(active?';border-width:2px':'')+'" onclick="setStatus(\''+s+'\')">'+s+'</button>';
+  }).join('');
+  document.getElementById('status-modal').classList.remove('hidden');
+}
+function closeStatusModal(){document.getElementById('status-modal').classList.add('hidden');}
+
+async function setStatus(status){
+  if(!statusEditRow)return;
+  const r=plants.find(p=>p._row===statusEditRow);if(!r)return;
+  closeStatusModal();
+  const days=calcDays(r.date);
+  const tc=r.costUnit&&r.qty?(r.costUnit*r.qty).toFixed(2):'';
+  const row=[r.plant,r.type,r.date,r.qty,r.container,r.location,r.method,r.expGerm,status,days,r.costUnit||'',tc,r.notes];
+  try{await apiUpdate('Plant Log','A'+statusEditRow+':M'+statusEditRow,[row]);toast(r.plant+' → '+status);await loadAll();}
+  catch(e){toast('Error: '+e.message);}
+}
+
+// ── Harvest ──
 function logHarvest(){
   const plant=document.getElementById('h-plant').value.trim(),date=document.getElementById('h-date').value;
   const amount=document.getElementById('h-amount').value.trim(),quality=document.getElementById('h-quality').value;
@@ -616,28 +863,36 @@ function logHarvest(){
   document.getElementById('h-plant').value='';document.getElementById('h-amount').value='';document.getElementById('h-notes').value='';
   renderHarvestTable();toast('Harvest logged');
 }
-
 function deleteHarvest(i){harvests.splice(i,1);localStorage.setItem('g26_harvests',JSON.stringify(harvests));renderHarvestTable();}
-
 function renderHarvestTable(){
   document.getElementById('h-tc').textContent=harvests.length;
   document.getElementById('h-tp').textContent=new Set(harvests.map(h=>h.plant)).size;
   document.getElementById('h-ld').textContent=harvests.length?harvests[0].date:'—';
   if(!harvests.length){document.getElementById('harvest-table').innerHTML='<div class="empty">No harvests yet.</div>';return;}
-  document.getElementById('harvest-table').innerHTML='<table><thead><tr><th>Plant</th><th>Date</th><th>Amount</th><th>Notes</th><th></th></tr></thead><tbody>'+
-    harvests.map((h,i)=>'<tr><td style="font-weight:500">'+h.plant+'</td><td>'+h.date+'</td><td style="color:var(--g600);font-weight:500">'+h.amount+'</td><td style="color:var(--muted);font-size:12px">'+(h.notes||'—')+'</td><td><button onclick="deleteHarvest('+i+')" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;padding:0 4px">×</button></td></tr>').join('')+'</tbody></table>';
+  document.getElementById('harvest-table').innerHTML='<table><thead><tr><th>Plant</th><th>Date</th><th>Amount</th><th>Quality</th><th></th></tr></thead><tbody>'+
+    harvests.map((h,i)=>'<tr><td style="font-weight:500">'+h.plant+'</td><td>'+h.date+'</td><td style="color:var(--g600);font-weight:500">'+h.amount+'</td><td>'+(h.quality||'—')+'</td><td><button onclick="deleteHarvest('+i+')" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;padding:0 6px">×</button></td></tr>').join('')+'</tbody></table>';
 }
 
+// ── Financials ──
 function renderFinancials(){
   const tot=costs.reduce((s,r)=>s+r.cost,0),ss=costs.filter(r=>r.category==='Seeds').reduce((s,r)=>s+r.cost,0);
   const tq=plants.reduce((s,r)=>s+r.qty,0),cpp=tq>0?tot/tq:0;
-  document.getElementById('fin-kpis').innerHTML=[kpi('Invested','$'+tot.toFixed(2),'total','green'),kpi('Seeds','$'+ss.toFixed(2),(tot>0?(ss/tot*100).toFixed(0):0)+'%','blue'),kpi('Cost/plant','$'+cpp.toFixed(2),tq+' plants','amber'),kpi('Items',costs.length,'purchased','teal')].join('');
+  document.getElementById('fin-kpis').innerHTML=[kpi('Invested','$'+tot.toFixed(2),'all categories','green'),kpi('Seeds','$'+ss.toFixed(2),(tot>0?(ss/tot*100).toFixed(0):0)+'%','blue'),kpi('Per plant','$'+cpp.toFixed(2),tq+' plants','amber'),kpi('Items',costs.length,'purchased','teal')].join('');
   const cats={};costs.forEach(r=>{cats[r.category]=(cats[r.category]||0)+r.cost;});
   document.getElementById('fin-cats').innerHTML=Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([c,a],i)=>{const p=tot>0?a/tot*100:0;return'<div class="bi"><div class="bm"><span class="bn2">'+c+'</span><span class="bv">$'+a.toFixed(2)+'</span></div><div class="bt2"><div class="bf" style="width:'+p+'%;background:'+CC[i%CC.length]+'"></div></div></div>';}).join('');
   document.getElementById('fin-top').innerHTML=[...costs].sort((a,b)=>b.cost-a.cost).slice(0,8).map(r=>{const p=tot>0?r.cost/tot*100:0;return'<div class="bi"><div class="bm"><span class="bn2">'+r.item+'</span><span class="bv">$'+r.cost.toFixed(2)+'</span></div><div class="bt2"><div class="bf" style="width:'+p+'%;background:#1565C0"></div></div></div>';}).join('');
+  // Cost efficiency
+  const plantCosts={};
+  plants.forEach(r=>{if(r.totalCost>0){if(!plantCosts[r.plant])plantCosts[r.plant]={cost:0,qty:0};plantCosts[r.plant].cost+=r.totalCost;plantCosts[r.plant].qty+=r.qty;}});
+  document.getElementById('fin-efficiency').innerHTML='<table><thead><tr><th>Plant</th><th>Total cost</th><th>Plants</th><th>Cost each</th><th>Category</th></tr></thead><tbody>'+
+    Object.entries(plantCosts).sort((a,b)=>b[1].cost-a[1].cost).map(([name,v])=>{
+      const info=lookupPlant(name);const cat=info?info.cat:'—';const cpp2=v.qty>0?v.cost/v.qty:0;
+      return'<tr><td style="font-weight:500">'+name+'</td><td style="font-family:\'DM Mono\',monospace;font-size:12px">$'+v.cost.toFixed(2)+'</td><td style="color:var(--muted)">'+v.qty+'</td><td style="font-family:\'DM Mono\',monospace;font-size:12px;color:var(--muted)">$'+cpp2.toFixed(2)+'</td><td><span style="font-size:11px;color:var(--muted)">'+cat+'</span></td></tr>';
+    }).join('')+'</tbody></table>';
   document.getElementById('fin-table').innerHTML='<table><thead><tr><th>Category</th><th>Item</th><th>Cost</th><th>Qty</th></tr></thead><tbody>'+costs.map(r=>'<tr><td><span class="badge bs">'+r.category+'</span></td><td style="font-weight:500">'+r.item+'</td><td style="font-family:\'DM Mono\',monospace;font-size:12px">$'+r.cost.toFixed(2)+'</td><td style="color:var(--muted)">'+r.qty+'</td></tr>').join('')+'</tbody></table>';
 }
 
+// ── Care ──
 function logCare(){
   const plant=document.getElementById('c-plant').value.trim(),type=document.getElementById('c-type').value;
   const date=document.getElementById('c-date').value,product=document.getElementById('c-product').value.trim();
@@ -646,42 +901,39 @@ function logCare(){
   careLogs.unshift({plant,type,date,product,notes,logged:new Date().toISOString()});
   localStorage.setItem('g26_care',JSON.stringify(careLogs));
   document.getElementById('c-plant').value='';document.getElementById('c-product').value='';document.getElementById('c-notes').value='';
-  renderCareTable();renderCareSummary();toast('Activity logged');
+  renderCareTable();renderCareSummary();renderPestFlags();toast('Logged');
 }
-
-function deleteCare(i){careLogs.splice(i,1);localStorage.setItem('g26_care',JSON.stringify(careLogs));renderCareTable();renderCareSummary();}
-
+function deleteCare(i){careLogs.splice(i,1);localStorage.setItem('g26_care',JSON.stringify(careLogs));renderCareTable();renderCareSummary();renderPestFlags();}
 function renderCareTable(){
   if(!careLogs.length){document.getElementById('care-table').innerHTML='<div class="empty">No activities yet.</div>';return;}
   document.getElementById('care-table').innerHTML='<table><thead><tr><th>Plant</th><th>Activity</th><th>Date</th><th>Notes</th><th></th></tr></thead><tbody>'+
     careLogs.map((r,i)=>{const col=CARE_C[r.type]||'#546E7A';return'<tr><td style="font-weight:500">'+r.plant+'</td><td><span class="sp" style="background:'+col+'22;color:'+col+'">'+r.type+'</span></td><td>'+r.date+'</td><td style="color:var(--muted);font-size:12px">'+(r.notes||'—')+'</td><td><button onclick="deleteCare('+i+')" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;padding:0 4px">×</button></td></tr>';}).join('')+'</tbody></table>';
 }
-
-function renderReminders(){
-  const rem=plants.filter(r=>r.type==='Seed'&&r.expGerm>0&&r.daysSince>=r.expGerm&&(!r.status||r.status==='Germinating'));
-  if(!rem.length){document.getElementById('reminders-list').innerHTML='<div class="empty">No active reminders.</div>';return;}
-  document.getElementById('reminders-list').innerHTML=rem.map(r=>'<div class="care-row"><div><div style="font-size:13px;font-weight:500">'+r.plant+'</div><div style="font-size:11px;color:var(--muted)">+'+(r.daysSince-r.expGerm)+'d past expected</div></div><span style="width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;flex-shrink:0"></span></div>').join('');
-}
-
 function renderCareSummary(){
   const tc={};careLogs.forEach(r=>{tc[r.type]=(tc[r.type]||0)+1;});
-  if(!Object.keys(tc).length){document.getElementById('care-summary').innerHTML='<div class="empty" style="padding:16px">Log activities to see summary.</div>';return;}
-  document.getElementById('care-summary').innerHTML=Object.entries(tc).sort((a,b)=>b[1]-a[1]).map(([t,c])=>{const col=CARE_C[t]||'#546E7A';return'<div class="care-row"><span style="font-size:13px">'+t+'</span><span class="sp" style="background:'+col+'22;color:'+col+'">'+c+'×</span></div>';}).join('');
+  if(!Object.keys(tc).length){document.getElementById('care-summary').innerHTML='<div class="empty" style="padding:12px">Log activities to see summary.</div>';return;}
+  document.getElementById('care-summary').innerHTML=Object.entries(tc).sort((a,b)=>b[1]-a[1]).map(([t,c])=>{const col=CARE_C[t]||'#546E7A';return'<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--g50)"><span style="font-size:13px">'+t+'</span><span class="sp" style="background:'+col+'22;color:'+col+'">'+c+'×</span></div>';}).join('');
+}
+function renderPestFlags(){
+  const flags=careLogs.filter(r=>r.type==='Pest treatment'||r.type==='Disease treatment');
+  if(!flags.length){document.getElementById('pest-flags').innerHTML='<div class="empty" style="padding:12px;color:var(--g600)">✓ No pest or disease flags</div>';return;}
+  document.getElementById('pest-flags').innerHTML=flags.slice(0,5).map(r=>{
+    const col=r.type==='Disease treatment'?'#880E4F':'#B71C1C';
+    return'<div style="display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--g50)"><div style="width:8px;height:8px;border-radius:50%;background:'+col+';flex-shrink:0;margin-top:5px"></div><div><div style="font-size:13px;font-weight:500">'+r.plant+'</div><div style="font-size:11px;color:var(--muted)">'+r.type+' · '+r.date+(r.product?' · '+r.product:'')+'</div></div></div>';
+  }).join('');
 }
 
 function showPage(name,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.ni,.bn-item').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
-  btn.classList.add('active');
+  const idx={overview:0,plants:1,timeline:2,harvest:3,financials:4,care:5};
+  document.querySelectorAll('.ni')[idx[name]]&&document.querySelectorAll('.ni')[idx[name]].classList.add('active');
+  document.querySelectorAll('.bn-item')[idx[name]]&&document.querySelectorAll('.bn-item')[idx[name]].classList.add('active');
   document.querySelector('.scroll-area').scrollTo(0,0);
-  // sync both navs
-  const idx={'overview':0,'plants':1,'harvest':2,'financials':3,'care':4}[name];
-  document.querySelectorAll('.ni')[idx]&&document.querySelectorAll('.ni')[idx].classList.add('active');
-  document.querySelectorAll('.bn-item')[idx]&&document.querySelectorAll('.bn-item')[idx].classList.add('active');
 }
-
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+function var_red(){return'#B71C1C';}function var_blue(){return'#1565C0';}
 
 const today=new Date().toISOString().split('T')[0];
 document.getElementById('h-date').value=today;
