@@ -393,7 +393,7 @@ const SHEET_ID='10W5EfL9dLcon3WpFUHzv33MvzD0tsYQPzl0V0BWq3Lo';
 const SCOPES='https://www.googleapis.com/auth/spreadsheets';
 const BASE='https://sheets.googleapis.com/v4/spreadsheets/';
 
-let accessToken=null,plants=[],costs=[],editingRow=null,statusEditRow=null,soilCostPerPeetPlant=0;
+let accessToken=null,plants=[],costs=[],editingRow=null,statusEditRow=null,soilCostPerPeetPlant=0,dashboardTotal=0;
 let harvests=JSON.parse(localStorage.getItem('g26_harvests')||'[]');
 let careLogs=JSON.parse(localStorage.getItem('g26_care')||'[]');
 
@@ -520,7 +520,7 @@ function fmtDateFull(d){return d.toLocaleDateString('en-US',{month:'short',day:'
 async function loadAll(){
   const lu=document.getElementById('lu-desk');if(lu)lu.textContent='Refreshing…';
   try{
-    const[pr,cr]=await Promise.all([apiGet('Plant Log','A2:M100'),apiGet('Costs','A2:F100')]);
+    const[pr,cr,dashR]=await Promise.all([apiGet('Plant Log','A2:M100'),apiGet('Costs','A2:F100'),apiGet('Dashboard','C18:C18')]);
     plants=pr.filter(r=>r[0]&&r[0]!=='TOTAL').map((r,i)=>({
       _row:i+2,plant:r[0]||'',type:r[1]||'',date:r[2]||'',qty:cleani(r[3]),
       container:r[4]||'',location:r[5]||'',method:r[6]||'',expGerm:cleani(r[7]),
@@ -541,6 +541,7 @@ async function loadAll(){
     const peetSoilCost=costs.filter(r=>r.category==='Soil').reduce((s,r)=>s+r.packCost,0);
     const peetPlants=plants.filter(r=>(r.container||'').toLowerCase().includes('peet'));
     const peetQty=peetPlants.reduce((s,r)=>s+r.qty,0);
+    dashboardTotal=dashR&&dashR[0]&&dashR[0][0]?clean(dashR[0][0]):0;
     soilCostPerPeetPlant=peetQty>0?peetSoilCost/peetQty:0;
     const t=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
     if(lu)lu.textContent=t;
@@ -554,7 +555,7 @@ function renderAll(){renderKPIs();renderHealthScore();renderDiversity();renderAl
 function kpi(l,v,s,c){return'<div class="kpi '+c+'"><div class="kpi-lbl">'+l+'</div><div class="kpi-val">'+v+'</div><div class="kpi-sub">'+s+'</div></div>';}
 
 function renderKPIs(){
-  const tp=plants.reduce((s,r)=>s+r.qty,0),ts=costs.reduce((s,r)=>s+r.effectiveCost,0);
+  const tp=plants.reduce((s,r)=>s+r.qty,0),ts=dashboardTotal||costs.reduce((s,r)=>s+r.effectiveCost,0);
   const sp=new Set(plants.map(r=>r.plant)).size;
   const ov=plants.filter(r=>r.type==='Seed'&&r.expGerm>0&&r.daysSince>=r.expGerm&&(!r.status||r.status==='Germinating')).length;
   // Germination rate
@@ -888,7 +889,7 @@ function renderHarvestTable(){
 
 // ── Financials ──
 function renderFinancials(){
-  const tot=costs.reduce((s,r)=>s+r.effectiveCost,0);
+  const tot=dashboardTotal||costs.reduce((s,r)=>s+r.effectiveCost,0);
   const ss=costs.filter(r=>r.category==='Seeds').reduce((s,r)=>s+r.effectiveCost,0);
   const tq=plants.reduce((s,r)=>s+r.qty,0),cpp=tq>0?tot/tq:0;
   document.getElementById('fin-kpis').innerHTML=[kpi('Invested','$'+tot.toFixed(2),'seeds at % used','green'),kpi('Seeds','$'+ss.toFixed(2),(tot>0?(ss/tot*100).toFixed(0):0)+'%','blue'),kpi('Per plant','$'+cpp.toFixed(2),tq+' plants','amber'),kpi('Items',costs.length,'purchased','teal')].join('');
