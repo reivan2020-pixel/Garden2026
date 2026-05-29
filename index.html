@@ -520,7 +520,7 @@ function fmtDateFull(d){return d.toLocaleDateString('en-US',{month:'short',day:'
 async function loadAll(){
   const lu=document.getElementById('lu-desk');if(lu)lu.textContent='Refreshing…';
   try{
-    const[pr,cr,dashR]=await Promise.all([apiGet('Plant Log','A2:M100'),apiGet('Costs','A2:F100'),apiGet('Dashboard','C18:C18')]);
+    const[pr,cr,dashR]=await Promise.all([apiGet('Plant Log','A2:M100'),apiGet('Costs','A2:G100'),apiGet('Dashboard','C18:C18')]);
     plants=pr.filter(r=>r[0]&&r[0]!=='TOTAL').map((r,i)=>({
       _row:i+2,plant:r[0]||'',type:r[1]||'',date:r[2]||'',qty:cleani(r[3]),
       container:r[4]||'',location:r[5]||'',method:r[6]||'',expGerm:cleani(r[7]),
@@ -531,10 +531,11 @@ async function loadAll(){
     costs=cr.filter(r=>r[0]&&r[0]!=='TOTAL').map(r=>{
       const category=r[0]||'',item=r[1]||'',packCost=clean(r[2]),qty=cleani(r[3]),perUnit=clean(r[4]);
       const pctUsed=r[5]?clean(r[5])/100:null;
+      const plantName=(r[6]||'').trim().toLowerCase();
       // Effective cost: seeds use % used if provided, transplants/pots/soil use full cost
       let effectiveCost=packCost;
       if(category==='Seeds'&&pctUsed!==null&&pctUsed>0){effectiveCost=packCost*pctUsed;}
-      return{category,item,packCost,cost:packCost,effectiveCost,qty,perUnit,pctUsed};
+      return{category,item,packCost,cost:packCost,effectiveCost,qty,perUnit,pctUsed,plantName};
     });
 
     // Allocate peet tray soil cost across plants in peet trays
@@ -898,27 +899,25 @@ function renderFinancials(){
   document.getElementById('fin-top').innerHTML=[...costs].sort((a,b)=>b.effectiveCost-a.effectiveCost).slice(0,8).map(r=>{const p=tot>0?r.effectiveCost/tot*100:0;return'<div class="bi"><div class="bm"><span class="bn2">'+r.item+'</span><span class="bv">$'+r.effectiveCost.toFixed(2)+'</span></div><div class="bt2"><div class="bf" style="width:'+p+'%;background:#1565C0"></div></div></div>';}).join('');
 
   // Smart per-plant cost breakdown
-  // Build a seed cost lookup by matching plant names to cost items
+  // Build exact cost lookup by plantName column G
   const seedCostByName={};
-  costs.filter(r=>r.category==='Seeds').forEach(r=>{
-    // match by item name (case-insensitive partial match)
-    const key=r.item.toLowerCase().replace(/\s*seeds?\s*$/,'').trim();
-    seedCostByName[key]=r.effectiveCost;
+  costs.filter(r=>r.category==='Seeds'&&r.plantName).forEach(r=>{
+    seedCostByName[r.plantName]=r.effectiveCost;
+  });
+  const nurseryCostByName={};
+  costs.filter(r=>r.category==='Plant'&&r.plantName).forEach(r=>{
+    nurseryCostByName[r.plantName]=(nurseryCostByName[r.plantName]||0)+r.effectiveCost;
   });
 
   const plantCosts={};
   plants.forEach(r=>{
-    if(!plantCosts[r.plant])plantCosts[r.plant]={seedCost:0,soilCost:0,nursryCost:0,qty:0,inPeet:false};
+    if(!plantCosts[r.plant])plantCosts[r.plant]={seedCost:0,soilCost:0,nursryCost:0,qty:0};
     const p=plantCosts[r.plant];
     p.qty+=r.qty;
-    // Nursery transplant cost
-    if(r.type==='Transplant'){p.nursryCost+=r.totalCost;}
-    // Seed cost from % used calculation
-    const nameKey=r.plant.toLowerCase().replace(/\s*seeds?\s*$/,'').trim();
-    const matched=Object.keys(seedCostByName).find(k=>k.includes(nameKey)||nameKey.includes(k));
-    if(matched)p.seedCost=seedCostByName[matched];
-    // Peet tray soil allocation
-    if((r.container||'').toLowerCase().includes('peet')){p.inPeet=true;p.soilCost+=soilCostPerPeetPlant*r.qty;}
+    const key=r.plant.toLowerCase().trim();
+    if(r.type==='Transplant'){p.nursryCost=nurseryCostByName[key]||0;}
+    else{p.seedCost=seedCostByName[key]||0;}
+    if((r.container||'').toLowerCase().includes('peet')){p.soilCost+=soilCostPerPeetPlant*r.qty;}
   });
 
   document.getElementById('fin-efficiency').innerHTML='<table><thead><tr><th>Plant</th><th>Seed cost</th><th>Soil alloc</th><th>Nursery</th><th>Total est</th><th>Per plant</th></tr></thead><tbody>'+
