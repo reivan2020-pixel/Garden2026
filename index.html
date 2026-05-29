@@ -530,7 +530,7 @@ async function loadAll(){
     }));
     costs=cr.filter(r=>r[0]&&r[0]!=='TOTAL').map(r=>{
       const category=r[0]||'',item=r[1]||'',packCost=clean(r[2]),qty=cleani(r[3]),perUnit=clean(r[4]);
-      const pctUsed=r[5]?clean(r[5]):null;
+      const pctUsed=r[5]?clean(r[5])/100:null;
       // Effective cost: seeds use % used if provided, transplants/pots/soil use full cost
       let effectiveCost=packCost;
       if(category==='Seeds'&&pctUsed!==null&&pctUsed>0){effectiveCost=packCost*pctUsed;}
