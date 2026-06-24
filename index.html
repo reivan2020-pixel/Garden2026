@@ -512,8 +512,26 @@ async function apiDelete(sheet,rowIdx){
 
 function clean(v){return parseFloat((v||'0').toString().replace(/[$,]/g,''))||0;}
 function cleani(v){return parseInt((v||'0').toString().replace(/[$,]/g,''))||0;}
-function calcDays(ds){if(!ds)return 0;const d=new Date(ds);return isNaN(d)?0:Math.floor((Date.now()-d.getTime())/86400000);}
-function addDays(ds,n){const d=new Date(ds);d.setDate(d.getDate()+n);return d;}
+function toISODate(v){
+  if(!v)return'';
+  v=v.toString().trim();
+  if(/^\d{4}-\d{2}-\d{2}$/.test(v))return v;
+  const m=v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(m)return m[3]+'-'+m[1].padStart(2,'0')+'-'+m[2].padStart(2,'0');
+  return'';
+}
+function calcDays(ds){
+  const iso=toISODate(ds);if(!iso)return 0;
+  const[y,mo,d]=iso.split('-').map(Number);
+  const planted=new Date(y,mo-1,d);
+  const today=new Date();today.setHours(0,0,0,0);
+  return Math.max(0,Math.floor((today-planted)/86400000));
+}
+function addDays(ds,n){
+  const iso=toISODate(ds);if(!iso)return new Date();
+  const[y,mo,d]=iso.split('-').map(Number);
+  const date=new Date(y,mo-1,d);date.setDate(date.getDate()+n);return date;
+}
 function fmtDate(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
 function fmtDateFull(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
 
@@ -522,9 +540,9 @@ async function loadAll(){
   try{
     const[pr,cr,dashR]=await Promise.all([apiGet('Plant Log','A2:M100'),apiGet('Costs','A2:G100'),apiGet('Dashboard','C18:C18')]);
     plants=pr.filter(r=>r[0]&&r[0]!=='TOTAL').map((r,i)=>({
-      _row:i+2,plant:r[0]||'',type:r[1]||'',date:r[2]||'',qty:cleani(r[3]),
+      _row:i+2,plant:r[0]||'',type:r[1]||'',date:toISODate(r[2]),qty:cleani(r[3]),
       container:r[4]||'',location:r[5]||'',method:r[6]||'',expGerm:cleani(r[7]),
-      status:r[8]||'',daysSince:r[9]?cleani(r[9]):calcDays(r[2]),
+      status:r[8]||'',daysSince:calcDays(r[2]),
       costUnit:clean(r[10]),totalCost:clean(r[11]),notes:r[12]||'',
       _info:lookupPlant(r[0])
     }));
