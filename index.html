@@ -961,14 +961,15 @@ function openContainerModal(rowNum){
 function closeContainerModal(){document.getElementById('container-modal').classList.add('hidden');containerEditRow=null;}
 async function saveContainerModal(){
   if(!containerEditRow)return;
-  const r=plants.find(p=>p._row===containerEditRow);if(!r)return;
+  const rowNum=containerEditRow;
+  const r=plants.find(p=>p._row===rowNum);if(!r)return;
   const value=document.getElementById('container-modal-input').value.trim();
   closeContainerModal();
   if(value===r.container)return;
   const days=calcDays(r.date);
   const tc=r.costUnit&&r.qty?(r.costUnit*r.qty).toFixed(2):'';
   const row=[r.plant,r.type,r.date,r.qty,value,r.location,r.method,r.expGerm,r.status,days,r.costUnit||'',tc,r.notes];
-  try{await apiUpdate('Plant Log','A'+containerEditRow+':M'+containerEditRow,[row]);toast(r.plant+' container → '+(value||'cleared'));await loadAll();}
+  try{await apiUpdate('Plant Log','A'+rowNum+':M'+rowNum,[row]);toast(r.plant+' container → '+(value||'cleared'));await loadAll();}
   catch(e){toast('Error: '+e.message);}
 }
 
