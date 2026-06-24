@@ -478,8 +478,9 @@ function showApp(){
 function signOut(){google.accounts.id.disableAutoSelect();localStorage.removeItem('g26_token');localStorage.removeItem('g26_token_exp');accessToken=null;document.getElementById('app').classList.add('hidden');document.getElementById('auth-screen').classList.remove('hidden');}
 
 // ── API ──
-async function apiGet(sheet,range){
-  const url=BASE+SHEET_ID+'/values/'+encodeURIComponent(sheet)+'!'+range+'?access_token='+accessToken;
+async function apiGet(sheet,range,unformatted){
+  const ropt=unformatted?'UNFORMATTED_VALUE':'FORMATTED_VALUE';
+  const url=BASE+SHEET_ID+'/values/'+encodeURIComponent(sheet)+'!'+range+'?valueRenderOption='+ropt+'&access_token='+accessToken;
   const res=await fetch(url);
   if(res.status===401){requestToken();throw new Error('Token expired');}
   if(!res.ok)throw new Error('HTTP '+res.status);
@@ -513,11 +514,23 @@ async function apiDelete(sheet,rowIdx){
 function clean(v){return parseFloat((v||'0').toString().replace(/[$,]/g,''))||0;}
 function cleani(v){return parseInt((v||'0').toString().replace(/[$,]/g,''))||0;}
 function toISODate(v){
-  if(!v)return'';
+  if(v==null||v==='')return'';
   v=v.toString().trim();
+  if(!v)return'';
+  // YYYY-MM-DD
   if(/^\d{4}-\d{2}-\d{2}$/.test(v))return v;
-  const m=v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if(m)return m[3]+'-'+m[1].padStart(2,'0')+'-'+m[2].padStart(2,'0');
+  // M/D/YYYY or MM/DD/YYYY (formatted value fallback)
+  const mdy=v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(mdy)return mdy[3]+'-'+mdy[1].padStart(2,'0')+'-'+mdy[2].padStart(2,'0');
+  // Sheets date serial from UNFORMATTED_VALUE (integer, e.g. 46175)
+  // Epoch: serial 25569 = Unix epoch (Jan 1 1970)
+  if(/^\d+$/.test(v)){
+    const n=parseInt(v);
+    if(n>25000&&n<80000){
+      const d=new Date((n-25569)*86400000);
+      return d.getUTCFullYear()+'-'+String(d.getUTCMonth()+1).padStart(2,'0')+'-'+String(d.getUTCDate()).padStart(2,'0');
+    }
+  }
   return'';
 }
 function calcDays(ds){
@@ -538,7 +551,7 @@ function fmtDateFull(d){return d.toLocaleDateString('en-US',{month:'short',day:'
 async function loadAll(){
   const lu=document.getElementById('lu-desk');if(lu)lu.textContent='Refreshing…';
   try{
-    const[pr,cr,dashR]=await Promise.all([apiGet('Plant Log','A2:M100'),apiGet('Costs','A2:G100'),apiGet('Dashboard','C18:C18')]);
+    const[pr,cr,dashR]=await Promise.all([apiGet('Plant Log','A2:M100',true),apiGet('Costs','A2:G100'),apiGet('Dashboard','C18:C18')]);
     plants=pr.filter(r=>r[0]&&r[0]!=='TOTAL').map((r,i)=>({
       _row:i+2,plant:r[0]||'',type:r[1]||'',date:toISODate(r[2]),qty:cleani(r[3]),
       container:r[4]||'',location:r[5]||'',method:r[6]||'',expGerm:cleani(r[7]),
