@@ -108,6 +108,16 @@ tr:last-child td{border-bottom:none;}
 .st-btn.active{border-width:2px;}
 .st-btn:active{opacity:.7;}
 
+/* Inline status select */
+.status-sel{font-size:11px;font-weight:500;border:1px solid;border-radius:20px;cursor:pointer;font-family:'DM Sans',sans-serif;padding:3px 8px;outline:none;max-width:160px;transition:opacity .1s;}
+.status-sel:active{opacity:.75;}
+.status-sel:focus{outline:2px solid var(--g400);outline-offset:1px;}
+
+/* Container chip button */
+.container-chip{display:inline-block;padding:2px 7px;border-radius:4px;background:var(--g50);border:1px solid var(--g200);color:var(--g700);font-size:10px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent;line-height:1.5;}
+.container-chip:active{opacity:.65;}
+.container-chip.unset{background:transparent;border-style:dashed;color:var(--g500);}
+
 /* Alert items */
 .alert-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--g50);}
 .alert-item:last-child{border-bottom:none;}
@@ -384,6 +394,22 @@ tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
+<!-- Container edit modal -->
+<div id="container-modal" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3 id="container-modal-title">Edit container</h3>
+    <div class="fgrp" style="margin-bottom:4px">
+      <label>Container</label>
+      <input type="text" id="container-modal-input" placeholder="e.g. 4in pot" onkeydown="if(event.key==='Enter')saveContainerModal()">
+    </div>
+    <div class="modal-btns">
+      <button class="btn bg2" onclick="closeContainerModal()">Cancel</button>
+      <button class="btn bp" onclick="saveContainerModal()">Save</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <datalist id="plant-list"></datalist>
 
@@ -393,7 +419,7 @@ const SHEET_ID='10W5EfL9dLcon3WpFUHzv33MvzD0tsYQPzl0V0BWq3Lo';
 const SCOPES='https://www.googleapis.com/auth/spreadsheets';
 const BASE='https://sheets.googleapis.com/v4/spreadsheets/';
 
-let accessToken=null,plants=[],costs=[],editingRow=null,statusEditRow=null,soilCostPerPeetPlant=0,dashboardTotal=0;
+let accessToken=null,plants=[],costs=[],editingRow=null,statusEditRow=null,containerEditRow=null,soilCostPerPeetPlant=0,dashboardTotal=0;
 let harvests=JSON.parse(localStorage.getItem('g26_harvests')||'[]');
 let careLogs=JSON.parse(localStorage.getItem('g26_care')||'[]');
 
@@ -724,8 +750,9 @@ function renderPlants(){
   document.getElementById('plants-table').innerHTML='<table><thead><tr><th>Plant</th><th>Days</th><th>Status</th><th>Harvest</th><th></th></tr></thead><tbody>'+
     f.map(r=>{
       const ov=r.type==='Seed'&&r.expGerm>0&&r.daysSince>=r.expGerm&&(!r.status||r.status==='Germinating');
-      const sc=SC[r.status];
-      const sb=r.status?'<span class="sp" style="background:'+sc.bg+';color:'+sc.fg+'" onclick="openStatusModal('+r._row+')">'+r.status+'</span>':'<span class="sp" style="background:var(--g50);color:var(--g600);border:1px dashed var(--g200)" onclick="openStatusModal('+r._row+')">set status</span>';
+      const sc=SC[r.status]||{bg:'var(--g50)',fg:'var(--g700)'};
+      const statusOpts='<option value=""'+(!r.status?' selected':'')+'>Not set</option>'+STATUSES.map(s=>'<option value="'+s+'"'+(r.status===s?' selected':'')+'>'+s+'</option>').join('');
+      const sb='<select class="status-sel" onchange="quickSetStatus('+r._row+',this.value)" style="background:'+sc.bg+';color:'+sc.fg+';border-color:'+sc.fg+'">'+statusOpts+'</select>';
       // Harvest window
       let hw='—';
       if(r._info&&r._info.dtm&&r.date){
@@ -733,7 +760,8 @@ function renderPlants(){
         if(dLeft>0)hw='~'+fmtDate(addDays(r.date,r._info.dtm));
         else hw='<span style="color:var(--g600);font-weight:500">Ready</span>';
       }
-      return'<tr><td><div style="font-weight:500;font-size:13px">'+r.plant+'</div><div style="font-size:10px;color:var(--muted)">'+r.qty+' · '+r.container+'</div></td><td style="'+(ov?'color:var(--red);font-weight:600':'color:var(--muted)')+';font-size:12px">'+r.daysSince+'d'+(ov?' ⚠':'')+'</td><td>'+sb+'</td><td style="font-size:12px;color:var(--muted)">'+hw+'</td><td><button class="btn bg2 bsm" onclick="openEditPlant('+r._row+')">Edit</button></td></tr>';
+      const cb='<button class="container-chip'+(r.container?'':' unset')+'" onclick="openContainerModal('+r._row+')">'+(r.container||'+ container')+'</button>';
+      return'<tr><td><div style="font-weight:500;font-size:13px">'+r.plant+'</div><div style="font-size:10px;color:var(--muted);margin-top:2px">'+r.qty+' · '+cb+'</div></td><td style="'+(ov?'color:var(--red);font-weight:600':'color:var(--muted)')+';font-size:12px">'+r.daysSince+'d'+(ov?' ⚠':'')+'</td><td>'+sb+'</td><td style="font-size:12px;color:var(--muted)">'+hw+'</td><td><button class="btn bg2 bsm" onclick="openEditPlant('+r._row+')">Edit</button></td></tr>';
     }).join('')+'</tbody></table>';
 }
 
@@ -895,6 +923,37 @@ async function setStatus(status){
   const tc=r.costUnit&&r.qty?(r.costUnit*r.qty).toFixed(2):'';
   const row=[r.plant,r.type,r.date,r.qty,r.container,r.location,r.method,r.expGerm,status,days,r.costUnit||'',tc,r.notes];
   try{await apiUpdate('Plant Log','A'+statusEditRow+':M'+statusEditRow,[row]);toast(r.plant+' → '+status);await loadAll();}
+  catch(e){toast('Error: '+e.message);}
+}
+
+async function quickSetStatus(rowNum,status){
+  const r=plants.find(p=>p._row===rowNum);if(!r)return;
+  const days=calcDays(r.date);
+  const tc=r.costUnit&&r.qty?(r.costUnit*r.qty).toFixed(2):'';
+  const row=[r.plant,r.type,r.date,r.qty,r.container,r.location,r.method,r.expGerm,status,days,r.costUnit||'',tc,r.notes];
+  try{await apiUpdate('Plant Log','A'+rowNum+':M'+rowNum,[row]);toast(r.plant+' → '+(status||'cleared'));await loadAll();}
+  catch(e){toast('Error: '+e.message);}
+}
+
+function openContainerModal(rowNum){
+  const r=plants.find(p=>p._row===rowNum);if(!r)return;
+  containerEditRow=rowNum;
+  document.getElementById('container-modal-title').textContent=r.plant;
+  document.getElementById('container-modal-input').value=r.container||'';
+  document.getElementById('container-modal').classList.remove('hidden');
+  setTimeout(()=>document.getElementById('container-modal-input').focus(),120);
+}
+function closeContainerModal(){document.getElementById('container-modal').classList.add('hidden');containerEditRow=null;}
+async function saveContainerModal(){
+  if(!containerEditRow)return;
+  const r=plants.find(p=>p._row===containerEditRow);if(!r)return;
+  const value=document.getElementById('container-modal-input').value.trim();
+  closeContainerModal();
+  if(value===r.container)return;
+  const days=calcDays(r.date);
+  const tc=r.costUnit&&r.qty?(r.costUnit*r.qty).toFixed(2):'';
+  const row=[r.plant,r.type,r.date,r.qty,value,r.location,r.method,r.expGerm,r.status,days,r.costUnit||'',tc,r.notes];
+  try{await apiUpdate('Plant Log','A'+containerEditRow+':M'+containerEditRow,[row]);toast(r.plant+' container → '+(value||'cleared'));await loadAll();}
   catch(e){toast('Error: '+e.message);}
 }
 
