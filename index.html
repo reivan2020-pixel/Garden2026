@@ -263,6 +263,7 @@ tr:last-child td{border-bottom:none;}
           </select>
         </div>
         <div class="card" style="padding:0"><div class="tw"><div id="plants-table"></div></div></div>
+        <div id="cemetery-wrap"></div>
       </div>
 
       <!-- TIMELINE -->
@@ -608,7 +609,7 @@ async function loadAll(){
   }catch(e){if(lu)lu.textContent='Error';toast('Error: '+e.message);}
 }
 
-function renderAll(){renderKPIs();renderHealthScore();renderDiversity();renderAlerts();renderSpendBars();renderStatusBars();renderPlants();renderTimeline();renderHarvestTable();renderFinancials();renderCareTable();renderCareSummary();renderPestFlags();}
+function renderAll(){renderKPIs();renderHealthScore();renderDiversity();renderAlerts();renderSpendBars();renderStatusBars();renderPlants();renderCemetery();renderTimeline();renderHarvestTable();renderFinancials();renderCareTable();renderCareSummary();renderPestFlags();}
 
 function kpi(l,v,s,c){return'<div class="kpi '+c+'"><div class="kpi-lbl">'+l+'</div><div class="kpi-val">'+v+'</div><div class="kpi-sub">'+s+'</div></div>';}
 
@@ -740,6 +741,7 @@ function renderPlants(){
   const search=document.getElementById('search').value.toLowerCase();
   const ft=document.getElementById('ftype').value,fs=document.getElementById('fstatus').value;
   let f=plants.filter(r=>{
+    if(r.status==='Dead'&&fs!=='Dead')return false;
     if(ft&&r.type!==ft)return false;
     if(fs==='__blank'&&r.status!=='')return false;
     if(fs&&fs!=='__blank'&&r.status!==fs)return false;
@@ -763,6 +765,19 @@ function renderPlants(){
       const cb='<button class="container-chip'+(r.container?'':' unset')+'" onclick="openContainerModal('+r._row+')">'+(r.container||'+ container')+'</button>';
       return'<tr><td><div style="font-weight:500;font-size:13px">'+r.plant+'</div><div style="font-size:10px;color:var(--muted);margin-top:2px">'+r.qty+' · '+cb+'</div></td><td style="'+(ov?'color:var(--red);font-weight:600':'color:var(--muted)')+';font-size:12px">'+r.daysSince+'d'+(ov?' ⚠':'')+'</td><td>'+sb+'</td><td style="font-size:12px;color:var(--muted)">'+hw+'</td><td><button class="btn bg2 bsm" onclick="openEditPlant('+r._row+')">Edit</button></td></tr>';
     }).join('')+'</tbody></table>';
+}
+
+// ── Plant cemetery ──
+function renderCemetery(){
+  const dead=plants.filter(r=>r.status==='Dead');
+  const wrap=document.getElementById('cemetery-wrap');
+  if(!dead.length){wrap.innerHTML='';return;}
+  const rows=dead.map(r=>{
+    const statusOpts='<option value="">Not set</option>'+STATUSES.map(s=>'<option value="'+s+'"'+(r.status===s?' selected':'')+'>'+s+'</option>').join('');
+    const cb='<button class="container-chip'+(r.container?'':' unset')+'" onclick="openContainerModal('+r._row+')">'+(r.container||'+ container')+'</button>';
+    return'<tr><td style="padding:10px;border-bottom:1px solid var(--g50)"><div style="font-weight:500;font-size:13px;color:var(--muted);text-decoration:line-through">'+r.plant+'</div><div style="font-size:10px;color:var(--muted);margin-top:2px">'+r.qty+' · '+cb+'</div></td><td style="padding:10px;border-bottom:1px solid var(--g50);color:var(--muted);font-size:12px">'+r.daysSince+'d</td><td style="padding:10px;border-bottom:1px solid var(--g50)"><select class="status-sel" onchange="quickSetStatus('+r._row+',this.value)" style="background:#ECEFF1;color:#546E7A;border-color:#90A4AE">'+statusOpts+'</select></td></tr>';
+  }).join('');
+  wrap.innerHTML='<div class="card" style="margin-top:14px;border-color:#ECEFF1;padding:0"><div style="padding:14px 16px 0"><div class="ct" style="cursor:pointer;-webkit-tap-highlight-color:transparent;margin-bottom:0" onclick="var b=document.getElementById(\'cem-body\');b.classList.toggle(\'hidden\');document.getElementById(\'cem-chev\').textContent=b.classList.contains(\'hidden\')?\'▸\':\'▾\'"><span style="color:var(--muted)">🪦 Plant cemetery</span><span style="display:flex;align-items:center;gap:8px"><span style="background:var(--muted);color:#fff;font-size:10px;padding:1px 7px;border-radius:10px;font-weight:600">'+dead.length+'</span><span id="cem-chev" style="color:var(--muted);font-size:11px">▸</span></span></div></div><div id="cem-body" class="hidden"><div style="padding:6px 16px 8px;font-size:12px;color:var(--muted)">Tap status to revive</div><div class="tw"><table style="width:100%;border-collapse:collapse"><thead><tr><th>Plant</th><th>Days</th><th>Status</th></tr></thead><tbody>'+rows+'</tbody></table></div></div></div>';
 }
 
 // ── Timeline ──
