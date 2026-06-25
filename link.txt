@@ -1,1 +1,3 @@
 https://reivan2020-pixel.github.io/Garden2026
+
+-add functionality to easily allow changing the number of plants (i.e 3 died but 3 are alive)
