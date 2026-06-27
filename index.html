@@ -113,6 +113,12 @@ tr:last-child td{border-bottom:none;}
 .status-sel:active{opacity:.75;}
 .status-sel:focus{outline:2px solid var(--g400);outline-offset:1px;}
 
+/* Plant group header */
+.plant-group-hdr{background:var(--g50);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.plant-group-hdr:active{background:var(--g100);}
+.plant-group-hdr td{padding:10px 14px!important;border-bottom:1px solid var(--border);}
+.grp-child td:first-child{padding-left:22px!important;}
+
 /* Container chip button */
 .container-chip{display:inline-block;padding:2px 7px;border-radius:4px;background:var(--g50);border:1px solid var(--g200);color:var(--g700);font-size:10px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent;line-height:1.5;}
 .container-chip:active{opacity:.65;}
@@ -411,6 +417,35 @@ tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
+<!-- Repot / split modal -->
+<div id="repot-modal" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3 id="repot-modal-title"></h3>
+    <p id="repot-modal-sub" style="font-size:13px;color:var(--muted);margin-bottom:16px"></p>
+    <div class="fg2">
+      <div class="fgrp">
+        <label>How many moving?</label>
+        <input type="number" id="repot-qty" min="1" value="1" style="font-size:20px;text-align:center;font-weight:600">
+      </div>
+      <div class="fgrp">
+        <label>New container</label>
+        <input type="text" id="repot-container" placeholder="e.g. 3.5in pot">
+      </div>
+      <div class="fgrp" style="grid-column:span 2">
+        <label>New status <span style="font-size:10px;color:var(--g400);font-weight:400;text-transform:none;letter-spacing:0">optional</span></label>
+        <select id="repot-status"></select>
+      </div>
+    </div>
+    <div id="repot-quick" style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap"></div>
+    <p style="font-size:11px;color:var(--muted);margin-bottom:16px">Moved plants get their own row · originals keep their qty reduced</p>
+    <div class="modal-btns">
+      <button class="btn bg2" onclick="closeRepotModal()">Cancel</button>
+      <button class="btn bp" id="repot-confirm-btn" onclick="confirmRepot()">Repot</button>
+    </div>
+  </div>
+</div>
+
 <!-- Loss modal -->
 <div id="loss-modal" class="modal-overlay hidden">
   <div class="modal">
@@ -439,7 +474,8 @@ const SHEET_ID='10W5EfL9dLcon3WpFUHzv33MvzD0tsYQPzl0V0BWq3Lo';
 const SCOPES='https://www.googleapis.com/auth/spreadsheets';
 const BASE='https://sheets.googleapis.com/v4/spreadsheets/';
 
-let accessToken=null,plants=[],costs=[],editingRow=null,statusEditRow=null,containerEditRow=null,lossRow=null,soilCostPerPeetPlant=0,dashboardTotal=0;
+let accessToken=null,plants=[],costs=[],editingRow=null,statusEditRow=null,containerEditRow=null,lossRow=null,repotRow=null,soilCostPerPeetPlant=0,dashboardTotal=0;
+const collapsedGroups=new Set();
 let harvests=JSON.parse(localStorage.getItem('g26_harvests')||'[]');
 let careLogs=JSON.parse(localStorage.getItem('g26_care')||'[]');
 
@@ -756,35 +792,62 @@ function renderStatusBars(){
     STATUSES.map(s=>{const c=cnt[s],p=c/tot*100,sc=SC[s];return'<div class="bi"><div class="bm"><span class="bn2" style="font-size:11px">'+s+'</span><span class="bv">'+c+'</span></div><div class="bt2"><div class="bf" style="width:'+p+'%;background:'+sc.fg+'"></div></div></div>';}).join('')+'</div>';
 }
 
+function plantSubRow(r,isChild){
+  const ov=r.type==='Seed'&&r.expGerm>0&&r.daysSince>=r.expGerm&&(!r.status||r.status==='Germinating');
+  const sc=SC[r.status]||{bg:'var(--g50)',fg:'var(--g700)'};
+  const statusOpts='<option value=""'+(!r.status?' selected':'')+'>Not set</option>'+STATUSES.map(s=>'<option value="'+s+'"'+(r.status===s?' selected':'')+'>'+s+'</option>').join('');
+  const sb='<select class="status-sel" onchange="quickSetStatus('+r._row+',this.value)" style="background:'+sc.bg+';color:'+sc.fg+';border-color:'+sc.fg+'">'+statusOpts+'</select>';
+  let hw='—';
+  if(r._info&&r._info.dtm&&r.date){const dLeft=r._info.dtm-r.daysSince;if(dLeft>0)hw='~'+fmtDate(addDays(r.date,r._info.dtm));else hw='<span style="color:var(--g600);font-weight:500">Ready</span>';}
+  const cb='<button class="container-chip'+(r.container?'':' unset')+'" onclick="openContainerModal('+r._row+')">'+(r.container||'+ container')+'</button>';
+  const lossBtn='<button class="btn bsm" style="background:#FFF3E0;color:var(--amber);border:1px solid #FFCC80;padding:7px 9px" onclick="openLossModal('+r._row+')" title="Log plant loss">🪦</button>';
+  const repotBtn=r.qty>1?'<button class="btn bg2 bsm" onclick="openRepotModal('+r._row+')" title="Split to new container">Repot</button>':'';
+  const nameCell=isChild
+    ?'<div style="font-size:12px;color:var(--muted)">'+r.qty+' · '+cb+'</div>'
+    :'<div style="font-weight:500;font-size:13px">'+r.plant+'</div><div style="font-size:10px;color:var(--muted);margin-top:2px">'+r.qty+' · '+cb+'</div>';
+  return'<tr class="plant-sub-row'+(isChild?' grp-child':'')+'"><td>'+nameCell+'</td><td style="'+(ov?'color:var(--red);font-weight:600':'color:var(--muted)')+';font-size:12px">'+r.daysSince+'d'+(ov?' ⚠':'')+'</td><td>'+sb+'</td><td style="font-size:12px;color:var(--muted)">'+hw+'</td><td><div style="display:flex;gap:4px;flex-wrap:wrap">'+repotBtn+'<button class="btn bg2 bsm" onclick="openEditPlant('+r._row+')">Edit</button>'+lossBtn+'</div></td></tr>';
+}
+
+function toggleGroup(name){
+  if(collapsedGroups.has(name))collapsedGroups.delete(name);else collapsedGroups.add(name);
+  renderPlants();
+}
+
 function renderPlants(){
   const search=document.getElementById('search').value.toLowerCase();
   const ft=document.getElementById('ftype').value,fs=document.getElementById('fstatus').value;
   let f=plants.filter(r=>{
-    if(r.status==='Dead'&&fs!=='Dead')return false;
+    if(r.status==='Dead')return false;
     if(ft&&r.type!==ft)return false;
     if(fs==='__blank'&&r.status!=='')return false;
     if(fs&&fs!=='__blank'&&r.status!==fs)return false;
     if(search&&!r.plant.toLowerCase().includes(search))return false;
     return true;
   });
-  if(!f.length){document.getElementById('plants-table').innerHTML='<div class="empty">No plants match filters.</div>';return;}
-  document.getElementById('plants-table').innerHTML='<table><thead><tr><th>Plant</th><th>Days</th><th>Status</th><th>Harvest</th><th></th></tr></thead><tbody>'+
-    f.map(r=>{
-      const ov=r.type==='Seed'&&r.expGerm>0&&r.daysSince>=r.expGerm&&(!r.status||r.status==='Germinating');
-      const sc=SC[r.status]||{bg:'var(--g50)',fg:'var(--g700)'};
-      const statusOpts='<option value=""'+(!r.status?' selected':'')+'>Not set</option>'+STATUSES.map(s=>'<option value="'+s+'"'+(r.status===s?' selected':'')+'>'+s+'</option>').join('');
-      const sb='<select class="status-sel" onchange="quickSetStatus('+r._row+',this.value)" style="background:'+sc.bg+';color:'+sc.fg+';border-color:'+sc.fg+'">'+statusOpts+'</select>';
-      // Harvest window
-      let hw='—';
-      if(r._info&&r._info.dtm&&r.date){
-        const dLeft=r._info.dtm-r.daysSince;
-        if(dLeft>0)hw='~'+fmtDate(addDays(r.date,r._info.dtm));
-        else hw='<span style="color:var(--g600);font-weight:500">Ready</span>';
-      }
-      const cb='<button class="container-chip'+(r.container?'':' unset')+'" onclick="openContainerModal('+r._row+')">'+(r.container||'+ container')+'</button>';
-      const lossBtn=r.status!=='Dead'?'<button class="btn bsm" style="background:#FFF3E0;color:var(--amber);border:1px solid #FFCC80;padding:7px 9px" onclick="openLossModal('+r._row+')" title="Log plant loss">🪦</button>':'';
-      return'<tr><td><div style="font-weight:500;font-size:13px">'+r.plant+'</div><div style="font-size:10px;color:var(--muted);margin-top:2px">'+r.qty+' · '+cb+'</div></td><td style="'+(ov?'color:var(--red);font-weight:600':'color:var(--muted)')+';font-size:12px">'+r.daysSince+'d'+(ov?' ⚠':'')+'</td><td>'+sb+'</td><td style="font-size:12px;color:var(--muted)">'+hw+'</td><td><div style="display:flex;gap:4px"><button class="btn bg2 bsm" onclick="openEditPlant('+r._row+')">Edit</button>'+lossBtn+'</div></td></tr>';
-    }).join('')+'</tbody></table>';
+
+  // Group by plant name preserving order
+  const groups=new Map();
+  f.forEach(r=>{if(!groups.has(r.plant))groups.set(r.plant,[]);groups.get(r.plant).push(r);});
+
+  let rows='';
+  groups.forEach((gRows,name)=>{
+    const multi=gRows.length>1;
+    const collapsed=multi&&collapsedGroups.has(name);
+    if(multi){
+      const totalQty=gRows.reduce((s,r)=>s+r.qty,0);
+      const statuses=[...new Set(gRows.map(r=>r.status).filter(Boolean))];
+      const badges=statuses.map(s=>{const sc=SC[s]||{bg:'var(--g50)',fg:'var(--g700)'};return'<span style="background:'+sc.bg+';color:'+sc.fg+';font-size:10px;padding:2px 7px;border-radius:10px;font-weight:500">'+s+'</span>';}).join('');
+      rows+='<tr class="plant-group-hdr" onclick="toggleGroup('+JSON.stringify(name)+')"><td colspan="5"><div style="display:flex;align-items:center;justify-content:space-between"><div><span style="font-weight:600;font-size:13px">'+name+'</span><span style="color:var(--muted);font-size:11px;margin-left:8px">'+totalQty+' plants · '+gRows.length+' containers</span></div><div style="display:flex;align-items:center;gap:6px">'+badges+'<span style="color:var(--muted);font-size:12px;margin-left:2px">'+(collapsed?'▸':'▾')+'</span></div></div></td></tr>';
+    }
+    if(!collapsed){gRows.forEach(r=>{rows+=plantSubRow(r,multi);});}
+  });
+
+  if(!rows){
+    document.getElementById('plants-table').innerHTML='<div class="empty">No plants match filters.</div>';
+  } else {
+    document.getElementById('plants-table').innerHTML='<table><thead><tr><th>Plant</th><th>Days</th><th>Status</th><th>Harvest</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
+  }
+  renderCemetery();
 }
 
 // ── Plant cemetery ──
@@ -1038,6 +1101,49 @@ async function confirmLoss(){
     await loadAll();
   }catch(e){toast('Error: '+e.message);}
   finally{btn.textContent='Log loss';btn.disabled=false;}
+}
+
+// ── Repot / split ──
+function openRepotModal(rowNum){
+  const r=plants.find(p=>p._row===rowNum);if(!r||r.qty<=1)return;
+  repotRow=rowNum;
+  document.getElementById('repot-modal-title').textContent='Repot — '+r.plant;
+  document.getElementById('repot-modal-sub').textContent=r.qty+' currently in '+(r.container||'no container')+' · move some to a new container';
+  const inp=document.getElementById('repot-qty');inp.value='1';inp.max=r.qty-1;
+  document.getElementById('repot-container').value='';
+  document.getElementById('repot-status').innerHTML='<option value="">Keep current ('+( r.status||'no status')+')</option>'+STATUSES.map(s=>'<option value="'+s+'">'+s+'</option>').join('');
+  const btns=[];
+  for(let i=1;i<=Math.min(r.qty-1,5);i++)btns.push('<button class="st-btn" style="background:#E3F2FD;color:var(--blue);border-color:#BBDEFB" onclick="document.getElementById(\'repot-qty\').value=\''+i+'\'">'+i+'</button>');
+  document.getElementById('repot-quick').innerHTML=btns.join('');
+  document.getElementById('repot-modal').classList.remove('hidden');
+  setTimeout(()=>document.getElementById('repot-container').focus(),120);
+}
+function closeRepotModal(){document.getElementById('repot-modal').classList.add('hidden');repotRow=null;}
+
+async function confirmRepot(){
+  const r=plants.find(p=>p._row===repotRow);if(!r)return;
+  const moving=parseInt(document.getElementById('repot-qty').value)||0;
+  const newContainer=document.getElementById('repot-container').value.trim();
+  const newStatus=document.getElementById('repot-status').value;
+  if(moving<=0||moving>=r.qty){toast('Move between 1 and '+(r.qty-1)+' plants');return;}
+  if(!newContainer){toast('Enter a container for the moved plants');return;}
+  const btn=document.getElementById('repot-confirm-btn');btn.textContent='Saving…';btn.disabled=true;
+  try{
+    const days=calcDays(r.date);
+    const remaining=r.qty-moving;
+    const tcRemain=r.costUnit?(r.costUnit*remaining).toFixed(2):'';
+    const tcMoved=r.costUnit?(r.costUnit*moving).toFixed(2):'';
+    const movedStatus=newStatus||r.status;
+    const movedNote='Repotted from '+(r.container||'tray')+' on '+new Date().toLocaleDateString();
+    const origRow=[r.plant,r.type,r.date,remaining,r.container,r.location,r.method,r.expGerm,r.status,days,r.costUnit||'',tcRemain,r.notes];
+    await apiUpdate('Plant Log','A'+repotRow+':M'+repotRow,[origRow]);
+    const newRow=[r.plant,r.type,r.date,moving,newContainer,r.location,r.method,r.expGerm,movedStatus,days,r.costUnit||'',tcMoved,movedNote];
+    await apiAppend('Plant Log',[newRow]);
+    closeRepotModal();
+    toast(moving+' '+r.plant+' → '+newContainer);
+    await loadAll();
+  }catch(e){toast('Error: '+e.message);}
+  finally{btn.textContent='Repot';btn.disabled=false;}
 }
 
 // ── Harvest ──
