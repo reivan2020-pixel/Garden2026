@@ -411,6 +411,25 @@ tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
+<!-- Loss modal -->
+<div id="loss-modal" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3 id="loss-modal-title"></h3>
+    <p id="loss-modal-sub" style="font-size:13px;color:var(--muted);margin-bottom:16px"></p>
+    <div class="fgrp" style="margin-bottom:12px">
+      <label>How many were lost?</label>
+      <input type="number" id="loss-qty" min="1" value="1" style="font-size:22px;text-align:center;font-weight:600">
+    </div>
+    <div id="loss-quick" style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap"></div>
+    <p style="font-size:11px;color:var(--muted);margin-bottom:16px">Survivors stay in the log · Lost plants are recorded as Dead</p>
+    <div class="modal-btns">
+      <button class="btn bg2" onclick="closeLossModal()">Cancel</button>
+      <button class="btn" style="background:var(--amber);color:#fff;width:100%" id="loss-confirm-btn" onclick="confirmLoss()">Log loss</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <datalist id="plant-list"></datalist>
 
@@ -420,7 +439,7 @@ const SHEET_ID='10W5EfL9dLcon3WpFUHzv33MvzD0tsYQPzl0V0BWq3Lo';
 const SCOPES='https://www.googleapis.com/auth/spreadsheets';
 const BASE='https://sheets.googleapis.com/v4/spreadsheets/';
 
-let accessToken=null,plants=[],costs=[],editingRow=null,statusEditRow=null,containerEditRow=null,soilCostPerPeetPlant=0,dashboardTotal=0;
+let accessToken=null,plants=[],costs=[],editingRow=null,statusEditRow=null,containerEditRow=null,lossRow=null,soilCostPerPeetPlant=0,dashboardTotal=0;
 let harvests=JSON.parse(localStorage.getItem('g26_harvests')||'[]');
 let careLogs=JSON.parse(localStorage.getItem('g26_care')||'[]');
 
@@ -763,7 +782,8 @@ function renderPlants(){
         else hw='<span style="color:var(--g600);font-weight:500">Ready</span>';
       }
       const cb='<button class="container-chip'+(r.container?'':' unset')+'" onclick="openContainerModal('+r._row+')">'+(r.container||'+ container')+'</button>';
-      return'<tr><td><div style="font-weight:500;font-size:13px">'+r.plant+'</div><div style="font-size:10px;color:var(--muted);margin-top:2px">'+r.qty+' · '+cb+'</div></td><td style="'+(ov?'color:var(--red);font-weight:600':'color:var(--muted)')+';font-size:12px">'+r.daysSince+'d'+(ov?' ⚠':'')+'</td><td>'+sb+'</td><td style="font-size:12px;color:var(--muted)">'+hw+'</td><td><button class="btn bg2 bsm" onclick="openEditPlant('+r._row+')">Edit</button></td></tr>';
+      const lossBtn=r.status!=='Dead'?'<button class="btn bsm" style="background:#FFF3E0;color:var(--amber);border:1px solid #FFCC80;padding:7px 9px" onclick="openLossModal('+r._row+')" title="Log plant loss">🪦</button>':'';
+      return'<tr><td><div style="font-weight:500;font-size:13px">'+r.plant+'</div><div style="font-size:10px;color:var(--muted);margin-top:2px">'+r.qty+' · '+cb+'</div></td><td style="'+(ov?'color:var(--red);font-weight:600':'color:var(--muted)')+';font-size:12px">'+r.daysSince+'d'+(ov?' ⚠':'')+'</td><td>'+sb+'</td><td style="font-size:12px;color:var(--muted)">'+hw+'</td><td><div style="display:flex;gap:4px"><button class="btn bg2 bsm" onclick="openEditPlant('+r._row+')">Edit</button>'+lossBtn+'</div></td></tr>';
     }).join('')+'</tbody></table>';
 }
 
@@ -971,6 +991,53 @@ async function saveContainerModal(){
   const row=[r.plant,r.type,r.date,r.qty,value,r.location,r.method,r.expGerm,r.status,days,r.costUnit||'',tc,r.notes];
   try{await apiUpdate('Plant Log','A'+rowNum+':M'+rowNum,[row]);toast(r.plant+' container → '+(value||'cleared'));await loadAll();}
   catch(e){toast('Error: '+e.message);}
+}
+
+// ── Plant loss ──
+function openLossModal(rowNum){
+  const r=plants.find(p=>p._row===rowNum);if(!r)return;
+  lossRow=rowNum;
+  document.getElementById('loss-modal-title').textContent='🪦 '+r.plant;
+  document.getElementById('loss-modal-sub').textContent=r.qty+' plant'+(r.qty!==1?'s':'')+' currently tracked';
+  const inp=document.getElementById('loss-qty');
+  inp.value='1';inp.max=r.qty;
+  const quick=document.getElementById('loss-quick');
+  const btns=[];
+  for(let i=1;i<=r.qty&&i<=6;i++){
+    const lbl=i===r.qty?i+' (all)':String(i);
+    btns.push('<button class="st-btn" style="background:#FFF3E0;color:var(--amber);border-color:#FFCC80" onclick="document.getElementById(\'loss-qty\').value=\''+i+'\'">'+lbl+'</button>');
+  }
+  quick.innerHTML=btns.join('');
+  document.getElementById('loss-modal').classList.remove('hidden');
+}
+function closeLossModal(){document.getElementById('loss-modal').classList.add('hidden');lossRow=null;}
+
+async function confirmLoss(){
+  const r=plants.find(p=>p._row===lossRow);if(!r)return;
+  const lost=parseInt(document.getElementById('loss-qty').value)||0;
+  if(lost<=0||lost>r.qty){toast('Enter a number between 1 and '+r.qty);return;}
+  const btn=document.getElementById('loss-confirm-btn');btn.textContent='Saving…';btn.disabled=true;
+  try{
+    const days=calcDays(r.date);
+    if(lost>=r.qty){
+      const tc=r.costUnit&&r.qty?(r.costUnit*r.qty).toFixed(2):'';
+      const row=[r.plant,r.type,r.date,r.qty,r.container,r.location,r.method,r.expGerm,'Dead',days,r.costUnit||'',tc,r.notes];
+      await apiUpdate('Plant Log','A'+lossRow+':M'+lossRow,[row]);
+    }else{
+      const remaining=r.qty-lost;
+      const tcRemain=r.costUnit?(r.costUnit*remaining).toFixed(2):'';
+      const tcLost=r.costUnit?(r.costUnit*lost).toFixed(2):'';
+      const lostNote='Lost '+lost+' on '+new Date().toLocaleDateString();
+      const survRow=[r.plant,r.type,r.date,remaining,r.container,r.location,r.method,r.expGerm,r.status,days,r.costUnit||'',tcRemain,r.notes];
+      await apiUpdate('Plant Log','A'+lossRow+':M'+lossRow,[survRow]);
+      const deadRow=[r.plant,r.type,r.date,lost,r.container,r.location,r.method,r.expGerm,'Dead',days,r.costUnit||'',tcLost,lostNote];
+      await apiAppend('Plant Log',[deadRow]);
+    }
+    closeLossModal();
+    toast(lost+' '+r.plant+(lost===1?' lost':' lost'));
+    await loadAll();
+  }catch(e){toast('Error: '+e.message);}
+  finally{btn.textContent='Log loss';btn.disabled=false;}
 }
 
 // ── Harvest ──
